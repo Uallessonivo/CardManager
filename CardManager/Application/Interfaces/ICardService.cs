@@ -1,6 +1,6 @@
 ﻿namespace CardManager.Application.Interfaces
 {
-    public interface IPessoaService
+    public interface ICardService
     {
     }
 }

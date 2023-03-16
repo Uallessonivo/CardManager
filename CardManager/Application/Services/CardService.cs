@@ -1,6 +1,6 @@
 ﻿namespace CardManager.Application.Services
 {
-    public class PessoaService
+    public class CardService
     {
     }
 }

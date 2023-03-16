@@ -1,6 +1,6 @@
 ﻿namespace CardManager.Infrastructure.Context
 {
-    public class ProjetoDbContexto
+    public class DbContext
     {
     }
 }

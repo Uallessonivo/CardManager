@@ -1,6 +1,6 @@
 ﻿namespace CardManager.Domain.Entities
 {
-    public class Pessoa
+    public class Card
     {
     }
 }
