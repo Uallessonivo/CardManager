@@ -1,6 +1,17 @@
-﻿namespace CardManager.Presentation.Controllers
+﻿using CardManager.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace CardManager.Presentation.Controllers
 {
-    public class CardController
+    [ApiController]
+    [Route("/api/[controller]")]
+    public class CardController : ControllerBase
     {
+        private readonly ICardService _cardService;
+
+        public CardController(ICardService cardService)
+        {
+            _cardService = cardService;
+        }
     }
 }
