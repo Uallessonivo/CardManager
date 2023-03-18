@@ -1,5 +1,7 @@
 ﻿using CardManager.Application.Interfaces;
 using CardManager.Domain.Entities;
+using CardManager.Domain.Enums;
+using CardManager.Domain.Errors;
 using CardManager.Infrastructure.Interfaces;
 
 namespace CardManager.Application.Services
@@ -15,27 +17,52 @@ namespace CardManager.Application.Services
 
         public Task CreateCardAsync(Card card)
         {
-            throw new NotImplementedException();
+            return _cardRepository.CreateCard(card);
         }
 
-        public Task DeleteCardAsync(Guid id)
+        public async Task DeleteCardAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var card = await GetByIdAsync(id);
+            await _cardRepository.DeleteCard(card);
         }
 
-        public Task<List<Card>> GetAllAsync()
+        public async Task<List<Card>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _cardRepository.GetAll();
         }
 
-        public Task<Card> GetByIdAsync(Guid id)
+        public async Task<List<Card>> GetAllByType(CardType type)
         {
-            throw new NotImplementedException();
+            var typeString = type.ToString();
+            if (!Enum.TryParse<CardType>(typeString, out var cardType))
+            {
+                throw new Exception(Errors.InvalidCardType(typeString));
+            }
+            return await _cardRepository.GetCardsByType(cardType);
         }
 
-        public Task UpdateCardAsync(Guid id, Card card)
+        public async Task<Card> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var card = await _cardRepository.GetCardById(id);
+
+            if (card == null)
+            {
+                throw new Exception(Errors.CardNotFound(id));
+            }
+
+            return card;
+        }
+
+        public async Task UpdateCardAsync(Guid id, Card card)
+        {
+            var result = await GetByIdAsync(id);
+
+            if (result == null)
+            {
+                throw new Exception(Errors.CardNotFound(id));
+            }
+
+            await _cardRepository.UpdateCard(card);
         }
     }
 }
