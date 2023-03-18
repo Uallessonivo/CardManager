@@ -8,6 +8,6 @@ namespace CardManager.Domain.Entities
         public string CardSerial { get; set; }
         public string CardOwnerName { get; set; }
         public string CardOwnerCpf { get; set; }
-        public CardTypes CardType { get; set; }
+        public CardType CardType { get; set; }
     }
 }

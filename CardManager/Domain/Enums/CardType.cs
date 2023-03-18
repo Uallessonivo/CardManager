@@ -1,6 +1,6 @@
 ﻿namespace CardManager.Domain.Enums
 {
-    public enum CardTypes
+    public enum CardType
     {
         DESPESAS_MATRIZ,
         DESPESAS_FILIAL,
