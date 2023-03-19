@@ -1,5 +1,6 @@
 ﻿using CardManager.Application.Interfaces;
 using CardManager.Domain.Enums;
+using CardManager.Presentation.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CardManager.Presentation.Controllers
@@ -41,6 +42,27 @@ namespace CardManager.Presentation.Controllers
         {
             var cards = await _cardService.GetAllByType(type);
             return Ok(cards);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCard([FromBody] CardDTO cardDTO)
+        {
+            await _cardService.CreateCardAsync(cardDTO);
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCard([FromRoute] Guid id,[FromBody] CardDTO cardDTO)
+        {
+            await _cardService.UpdateCardAsync(id, cardDTO);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCard([FromRoute] Guid id)
+        {
+            await _cardService.DeleteCardAsync(id);
+            return Ok();
         }
     }
 }
