@@ -1,5 +1,6 @@
 ﻿using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
+using CardManager.Presentation.DTO;
 
 namespace CardManager.Application.Interfaces
 {
@@ -8,8 +9,8 @@ namespace CardManager.Application.Interfaces
         Task<List<Card>> GetAllAsync();
         Task<Card> GetByIdAsync(Guid id);
         Task<List<Card>> GetAllByType(CardType type);
-        Task CreateCardAsync(Card card);
-        Task UpdateCardAsync(Guid id, Card card);
+        Task CreateCardAsync(CardDTO card);
+        Task UpdateCardAsync(Guid id, CardDTO card);
         Task DeleteCardAsync(Guid id);
 
     }

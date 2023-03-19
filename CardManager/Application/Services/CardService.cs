@@ -3,6 +3,7 @@ using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
 using CardManager.Domain.Errors;
 using CardManager.Infrastructure.Interfaces;
+using CardManager.Presentation.DTO;
 
 namespace CardManager.Application.Services
 {
@@ -15,9 +16,18 @@ namespace CardManager.Application.Services
             _cardRepository = cardRepository;
         }
 
-        public Task CreateCardAsync(Card card)
+        public Task CreateCardAsync(CardDTO card)
         {
-            return _cardRepository.CreateCard(card);
+            var newCard = new Card
+            {
+                CardId = Guid.NewGuid(),
+                CardSerial = card.CardSerial,
+                CardOwnerName = card.CardOwnerName,
+                CardOwnerCpf = card.CardOwnerCpf,
+                CardType = card.CardType
+            };
+
+            return _cardRepository.CreateCard(newCard);
         }
 
         public async Task DeleteCardAsync(Guid id)
@@ -53,7 +63,7 @@ namespace CardManager.Application.Services
             return card;
         }
 
-        public async Task UpdateCardAsync(Guid id, Card card)
+        public async Task UpdateCardAsync(Guid id, CardDTO card)
         {
             var result = await GetByIdAsync(id);
 
@@ -62,7 +72,16 @@ namespace CardManager.Application.Services
                 throw new Exception(Errors.CardNotFound(id));
             }
 
-            await _cardRepository.UpdateCard(card);
+            var updatedCard = new Card
+            {
+                CardId = id,
+                CardSerial = card.CardSerial,
+                CardOwnerName = card.CardOwnerName,
+                CardOwnerCpf = card.CardOwnerCpf,
+                CardType = card.CardType
+            };
+
+            await _cardRepository.UpdateCard(updatedCard);
         }
     }
 }
