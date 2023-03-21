@@ -15,6 +15,12 @@ namespace CardManager.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task<Card?> GetCardByCpfOwner(string cpf)
+        {
+            return await _dbContext.Cards
+                .FirstOrDefaultAsync(x => x.CardOwnerCpf == cpf);
+        }
+
         public async Task CreateCard(Card card)
         {
            await _dbContext.Cards.AddAsync(card);
