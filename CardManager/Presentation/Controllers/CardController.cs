@@ -19,8 +19,15 @@ namespace CardManager.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCards()
         {
-            var cards = await _cardService.GetAllAsync();
-            return Ok(cards);
+            try
+            {
+                var cards = await _cardService.GetAllAsync();
+                return Ok(cards);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
@@ -33,36 +40,78 @@ namespace CardManager.Presentation.Controllers
             } 
             catch (Exception ex)
             {
-                return StatusCode(404, ex.Message);
+                return StatusCode(NotFound().StatusCode, ex.Message);
             }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCardByType([FromRoute] CardType type)
         {
-            var cards = await _cardService.GetAllByType(type);
-            return Ok(cards);
+            try
+            {
+                var cards = await _cardService.GetAllByType(type);
+                return Ok(cards);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(NotFound().StatusCode, ex.Message);
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCard([FromBody] CardDTO cardDTO)
+        public async Task<IActionResult> CreateCard([FromBody] CardDTO cardDto)
         {
-            await _cardService.CreateCardAsync(cardDTO);
-            return Ok();
+            try
+            {
+                await _cardService.CreateCardAsync(cardDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(BadRequest().StatusCode, ex.Message);
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateCard([FromRoute] Guid id,[FromBody] CardDTO cardDTO)
+        public async Task<IActionResult> UpdateCard([FromRoute] Guid id,[FromBody] CardDTO cardDto)
         {
-            await _cardService.UpdateCardAsync(id, cardDTO);
-            return Ok();
+            try
+            {
+                await _cardService.UpdateCardAsync(id, cardDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(BadRequest().StatusCode, ex.Message);
+            }
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteCard([FromRoute] Guid id)
         {
-            await _cardService.DeleteCardAsync(id);
-            return Ok();
+            try
+            {
+                await _cardService.DeleteCardAsync(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(BadRequest().StatusCode, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCardByOwnerCpf([FromRoute] string ownerCpfName)
+        {
+            try
+            {
+                var cards = await _cardService.GetByOwnerCpfAsync(ownerCpfName);
+                return Ok(cards);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(NotFound().StatusCode, ex.Message);
+            }
         }
     }
 }
