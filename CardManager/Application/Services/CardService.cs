@@ -16,8 +16,15 @@ namespace CardManager.Application.Services
             _cardRepository = cardRepository;
         }
 
-        public Task CreateCardAsync(CardDTO card)
+        public async Task CreateCardAsync(CardDTO card)
         {
+            var cardExists = _cardRepository.GetCardByCpfOwner(card.CardOwnerCpf);
+
+            if (cardExists is not null)
+            {
+                throw new Exception(Errors.CardAlreadyExists());
+            }
+
             var newCard = new Card
             {
                 CardId = Guid.NewGuid(),
@@ -27,12 +34,18 @@ namespace CardManager.Application.Services
                 CardType = card.CardType
             };
 
-            return _cardRepository.CreateCard(newCard);
+            await _cardRepository.CreateCard(newCard);
         }
 
         public async Task DeleteCardAsync(Guid id)
         {
             var card = await GetByIdAsync(id);
+
+            if (card == null)
+            {
+                throw new Exception(Errors.CardNotFound(id));
+            }
+
             await _cardRepository.DeleteCard(card);
         }
 
@@ -41,13 +54,27 @@ namespace CardManager.Application.Services
             return await _cardRepository.GetAll();
         }
 
+        public async Task<Card> GetByOwnerCpfAsync(string cpf)
+        {
+            var card = await _cardRepository.GetCardByCpfOwner(cpf);
+
+            if (card == null)
+            {
+                throw new Exception(Errors.CardNotFound(cpf));
+            }
+
+            return card;
+        }
+
         public async Task<List<Card>> GetAllByType(CardType type)
         {
             var typeString = type.ToString();
+
             if (!Enum.TryParse<CardType>(typeString, out var cardType))
             {
                 throw new Exception(Errors.InvalidCardType(typeString));
             }
+
             return await _cardRepository.GetCardsByType(cardType);
         }
 
@@ -74,11 +101,11 @@ namespace CardManager.Application.Services
 
             var updatedCard = new Card
             {
-                CardId = id,
-                CardSerial = card.CardSerial,
+                CardId = result.CardId,
+                CardType = result.CardType,
                 CardOwnerName = card.CardOwnerName,
                 CardOwnerCpf = card.CardOwnerCpf,
-                CardType = card.CardType
+                CardSerial = result.CardSerial
             };
 
             await _cardRepository.UpdateCard(updatedCard);
