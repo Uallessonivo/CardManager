@@ -16,7 +16,7 @@ namespace CardManager.Presentation.Controllers
             _cardService = cardService;
         }
 
-        [HttpGet]
+        [HttpGet("list")]
         public async Task<IActionResult> GetCards()
         {
             try
@@ -26,11 +26,11 @@ namespace CardManager.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(404, ex.Message);
+                return StatusCode(NotFound().StatusCode, ex.Message);
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("filter/id/{id}")]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             try
@@ -44,7 +44,7 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("filter/type/{type}")]
         public async Task<IActionResult> GetCardByType([FromRoute] CardType type)
         {
             try
@@ -58,8 +58,8 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateCard([FromBody] CardDTO cardDto)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateCard([FromBody] CardDto cardDto)
         {
             try
             {
@@ -72,8 +72,8 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateCard([FromRoute] Guid id,[FromBody] CardDTO cardDto)
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateCard([FromRoute] Guid id,[FromBody] CardDto cardDto)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCard([FromRoute] Guid id)
         {
             try
@@ -100,12 +100,12 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetCardByOwnerCpf([FromRoute] string ownerCpfName)
+        [HttpGet("filter/owner/{owner}")]
+        public async Task<IActionResult> GetCardByOwnerCpf([FromRoute] string owner)
         {
             try
             {
-                var cards = await _cardService.GetByOwnerCpfAsync(ownerCpfName);
+                var cards = await _cardService.GetByOwnerCpfAsync(owner);
                 return Ok(cards);
             }
             catch (Exception ex)

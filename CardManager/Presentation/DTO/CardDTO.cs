@@ -2,11 +2,11 @@
 
 namespace CardManager.Presentation.DTO
 {
-    public class CardDTO
+    public class CardDto
     {
-        public string CardSerial { get; set; }
-        public string CardOwnerName { get; set; }
-        public string CardOwnerCpf { get; set; }
-        public CardType CardType { get; set; }
+        public string? CardSerial { get; set; }
+        public string? CardOwnerName { get; set; }
+        public string? CardOwnerCpf { get; set; }
+        public string? CardType { get; set; }
     }
 }
