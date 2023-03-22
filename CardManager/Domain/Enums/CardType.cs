@@ -2,9 +2,9 @@
 {
     public enum CardType
     {
-        DESPESAS_MATRIZ,
-        DESPESAS_FILIAL,
-        INCENTIVO_MATRIZ,
-        INCENTIVO_FILIAL
+        DespesasMatriz,
+        DespesasFilial,
+        IncentivoMatriz,
+        IncentivoFilial
     }
 }
