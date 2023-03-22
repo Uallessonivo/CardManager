@@ -1,4 +1,5 @@
-﻿using CardManager.Application.Interfaces;
+﻿using CardManager.Application.Common;
+using CardManager.Application.Interfaces;
 using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
 using CardManager.Domain.Errors;
@@ -16,14 +17,16 @@ namespace CardManager.Application.Services
             _cardRepository = cardRepository;
         }
 
-        public async Task CreateCardAsync(CardDTO card)
+        public async Task CreateCardAsync(CardDto card)
         {
-            var cardExists = _cardRepository.GetCardByCpfOwner(card.CardOwnerCpf);
+            var cardExists = await _cardRepository.GetCardByCpfOwner(card.CardOwnerCpf);
 
-            if (cardExists is not null)
+            if (cardExists != null)
             {
                 throw new Exception(Errors.CardAlreadyExists());
             }
+
+            var cardType = CheckCardType.IsCardValid(card.CardType);
 
             var newCard = new Card
             {
@@ -31,7 +34,7 @@ namespace CardManager.Application.Services
                 CardSerial = card.CardSerial,
                 CardOwnerName = card.CardOwnerName,
                 CardOwnerCpf = card.CardOwnerCpf,
-                CardType = card.CardType
+                CardType = cardType
             };
 
             await _cardRepository.CreateCard(newCard);
@@ -51,7 +54,8 @@ namespace CardManager.Application.Services
 
         public async Task<List<Card>> GetAllAsync()
         {
-            return await _cardRepository.GetAll();
+            var cards = await _cardRepository.GetAll();
+            return cards;
         }
 
         public async Task<Card> GetByOwnerCpfAsync(string cpf)
@@ -90,7 +94,7 @@ namespace CardManager.Application.Services
             return card;
         }
 
-        public async Task UpdateCardAsync(Guid id, CardDTO card)
+        public async Task UpdateCardAsync(Guid id, CardDto card)
         {
             var result = await GetByIdAsync(id);
 
