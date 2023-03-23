@@ -31,7 +31,7 @@ namespace CardManager.Presentation.Controllers
         }
 
         [HttpGet("filter/id/{id}")]
-        public async Task<IActionResult> GetByIdAsync(Guid id)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpPost("update")]
+        [HttpPost("update/{id}")]
         public async Task<IActionResult> UpdateCard([FromRoute] Guid id,[FromBody] CardDto cardDto)
         {
             try
@@ -86,7 +86,7 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteCard([FromRoute] Guid id)
         {
             try
