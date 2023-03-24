@@ -1,20 +1,23 @@
-﻿using CardManager.Application.Common;
-using CardManager.Application.Interfaces;
+﻿using CardManager.Application.Interfaces;
+using CardManager.Application.Validators;
 using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
 using CardManager.Domain.Errors;
 using CardManager.Infrastructure.Interfaces;
 using CardManager.Presentation.DTO;
+using FluentValidation;
 
 namespace CardManager.Application.Services
 {
     public class CardService : ICardService
     {
         private readonly ICardRepository _cardRepository;
+        private readonly IValidator<CardDto> _cardValidator;
 
-        public CardService(ICardRepository cardRepository)
+        public CardService(ICardRepository cardRepository, IValidator<CardDto> cardValidator)
         {
             _cardRepository = cardRepository;
+            _cardValidator = cardValidator;
         }
 
         public async Task CreateCardAsync(CardDto card)
@@ -24,6 +27,14 @@ namespace CardManager.Application.Services
             if (cardExists != null)
             {
                 throw new Exception(Errors.CardAlreadyExists());
+            }
+
+            var validationResult = await _cardValidator.ValidateAsync(card);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage);
+                throw new Exception(Errors.InvalidFields(string.Join(", ", errors)));
             }
 
             var cardType = CheckCardType.IsCardValid(card.CardType);
@@ -42,13 +53,7 @@ namespace CardManager.Application.Services
 
         public async Task DeleteCardAsync(Guid id)
         {
-            var card = await GetByIdAsync(id);
-
-            if (card == null)
-            {
-                throw new Exception(Errors.CardNotFound(id));
-            }
-
+            var card = await GetByIdAsync(id) ?? throw new Exception(Errors.CardNotFound(id));
             await _cardRepository.DeleteCard(card);
         }
 
@@ -61,13 +66,7 @@ namespace CardManager.Application.Services
         public async Task<Card> GetByOwnerCpfAsync(string cpf)
         {
             var card = await _cardRepository.GetCardByCpfOwner(cpf);
-
-            if (card == null)
-            {
-                throw new Exception(Errors.CardNotFound(cpf));
-            }
-
-            return card;
+            return card ?? throw new Exception(Errors.CardNotFound(cpf));
         }
 
         public async Task<List<Card>> GetAllByType(CardType type)
@@ -84,25 +83,13 @@ namespace CardManager.Application.Services
 
         public async Task<Card> GetByIdAsync(Guid id)
         {
-            var card = await _cardRepository.GetCardById(id);
-
-            if (card == null)
-            {
-                throw new Exception(Errors.CardNotFound(id));
-            }
-
+            var card = await _cardRepository.GetCardById(id) ?? throw new Exception(Errors.CardNotFound(id));
             return card;
         }
 
         public async Task UpdateCardAsync(Guid id, CardDto card)
         {
-            var result = await GetByIdAsync(id);
-
-            if (result == null)
-            {
-                throw new Exception(Errors.CardNotFound(id));
-            }
-
+            var result = await GetByIdAsync(id) ?? throw new Exception(Errors.CardNotFound(id));
             var updatedCard = new Card
             {
                 CardId = result.CardId,

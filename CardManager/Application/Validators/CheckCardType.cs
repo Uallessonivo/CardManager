@@ -1,7 +1,7 @@
 ﻿using CardManager.Domain.Enums;
 using CardManager.Domain.Errors;
 
-namespace CardManager.Application.Common
+namespace CardManager.Application.Validators
 {
     public static class CheckCardType
     {
