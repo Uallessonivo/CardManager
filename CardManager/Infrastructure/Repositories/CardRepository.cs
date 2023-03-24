@@ -24,6 +24,7 @@ namespace CardManager.Infrastructure.Repositories
         public async Task CreateCard(Card card)
         {
            await _dbContext.Cards.AddAsync(card);
+           await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteCard(Card card)
