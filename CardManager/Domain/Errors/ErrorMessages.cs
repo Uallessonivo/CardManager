@@ -21,7 +21,12 @@ namespace CardManager.Domain.Errors
 
         public static string InvalidCardType(string type)
         {
-            return $"Não temos esse tipo de cartão em nossa base: {type}";
+            return $"O tipo de cartão {type} não está disponível.";
+        }
+
+        public static string InvalidFields(string message)
+        {
+            return $"{message}";
         }
     }
 }
