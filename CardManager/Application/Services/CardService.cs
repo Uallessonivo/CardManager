@@ -1,4 +1,5 @@
 ﻿using CardManager.Application.Interfaces;
+using CardManager.Application.Utils;
 using CardManager.Application.Validators;
 using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
@@ -22,19 +23,19 @@ namespace CardManager.Application.Services
 
         public async Task CreateCardAsync(CardDto card)
         {
-            var cardExists = await _cardRepository.GetCardByCpfOwner(card.CardOwnerCpf);
-
-            if (cardExists != null)
-            {
-                throw new Exception(Errors.CardAlreadyExists());
-            }
-
             var validationResult = await _cardValidator.ValidateAsync(card);
 
             if (!validationResult.IsValid)
             {
                 var errors = validationResult.Errors.Select(e => e.ErrorMessage);
                 throw new Exception(Errors.InvalidFields(string.Join(", ", errors)));
+            }
+
+            var cardExists = await _cardRepository.GetCardByCpfOwner(card.CardOwnerCpf);
+
+            if (cardExists != null)
+            {
+                throw new Exception(Errors.CardAlreadyExists());
             }
 
             var cardType = CheckCardType.IsCardValid(card.CardType);
@@ -55,6 +56,16 @@ namespace CardManager.Application.Services
         {
             var card = await GetByIdAsync(id) ?? throw new Exception(Errors.CardNotFound(id));
             await _cardRepository.DeleteCard(card);
+        }
+
+        public async Task SeedDatabaseTask(IFormFile file)
+        {
+            var cards = await ProcessFile.Parse(file);
+
+            foreach (var card in cards)
+            {
+                await CreateCardAsync(card);
+            }
         }
 
         public async Task<List<Card>> GetAllAsync()
@@ -89,6 +100,14 @@ namespace CardManager.Application.Services
 
         public async Task UpdateCardAsync(Guid id, CardDto card)
         {
+            var validationResult = await _cardValidator.ValidateAsync(card);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage);
+                throw new Exception(Errors.InvalidFields(string.Join(", ", errors)));
+            }
+
             var result = await GetByIdAsync(id) ?? throw new Exception(Errors.CardNotFound(id));
             var updatedCard = new Card
             {
