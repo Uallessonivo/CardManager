@@ -72,6 +72,20 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
+        [HttpPost("upload/seed-database")]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+            try
+            {
+                await _cardService.SeedDatabaseTask(file);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(BadRequest().StatusCode, ex.Message);
+            }
+        }
+
         [HttpPost("update/{id}")]
         public async Task<IActionResult> UpdateCard([FromRoute] Guid id,[FromBody] CardDto cardDto)
         {
