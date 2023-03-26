@@ -13,5 +13,6 @@ namespace CardManager.Application.Interfaces
         Task CreateCardAsync(CardDto card);
         Task UpdateCardAsync(Guid id, CardDto card);
         Task DeleteCardAsync(Guid id);
+        Task SeedDatabaseTask(IFormFile file);
     }
 }
