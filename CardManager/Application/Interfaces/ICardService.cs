@@ -1,6 +1,6 @@
-﻿using CardManager.Domain.Entities;
+﻿using CardManager.Application.DTO;
+using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
-using CardManager.Presentation.DTO;
 
 namespace CardManager.Application.Interfaces
 {
@@ -11,7 +11,7 @@ namespace CardManager.Application.Interfaces
         Task<Card> GetByOwnerCpfAsync(string cpf);
         Task<List<Card>> GetAllByType(CardType type);
         Task CreateCardAsync(CardDto card);
-        Task UpdateCardAsync(Guid id, CardDto card);
+        Task UpdateCardAsync(Guid id, UpdateCardDto card);
         Task DeleteCardAsync(Guid id);
         Task SeedDatabaseTask(IFormFile file);
     }
