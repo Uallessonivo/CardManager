@@ -1,6 +1,6 @@
-﻿using CardManager.Application.Interfaces;
+﻿using CardManager.Application.DTO;
+using CardManager.Application.Interfaces;
 using CardManager.Domain.Enums;
-using CardManager.Presentation.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CardManager.Presentation.Controllers
@@ -87,11 +87,11 @@ namespace CardManager.Presentation.Controllers
         }
 
         [HttpPost("update/{id}")]
-        public async Task<IActionResult> UpdateCard([FromRoute] Guid id,[FromBody] CardDto cardDto)
+        public async Task<IActionResult> UpdateCard([FromRoute] Guid id,[FromBody] UpdateCardDto updateCardDto)
         {
             try
             {
-                await _cardService.UpdateCardAsync(id, cardDto);
+                await _cardService.UpdateCardAsync(id, updateCardDto);
                 return Ok();
             }
             catch (Exception ex)
