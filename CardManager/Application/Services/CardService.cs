@@ -1,11 +1,11 @@
-﻿using CardManager.Application.Interfaces;
+﻿using CardManager.Application.DTO;
+using CardManager.Application.Interfaces;
 using CardManager.Application.Utils;
 using CardManager.Application.Validators;
 using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
 using CardManager.Domain.Errors;
 using CardManager.Infrastructure.Interfaces;
-using CardManager.Presentation.DTO;
 using FluentValidation;
 
 namespace CardManager.Application.Services
@@ -14,11 +14,14 @@ namespace CardManager.Application.Services
     {
         private readonly ICardRepository _cardRepository;
         private readonly IValidator<CardDto> _cardValidator;
+        private readonly IValidator<UpdateCardDto> _updatedCardValidator;
 
-        public CardService(ICardRepository cardRepository, IValidator<CardDto> cardValidator)
+        public CardService(ICardRepository cardRepository, IValidator<CardDto> cardValidator,
+            IValidator<UpdateCardDto> updatedCardValidator)
         {
             _cardRepository = cardRepository;
             _cardValidator = cardValidator;
+            _updatedCardValidator = updatedCardValidator;
         }
 
         public async Task CreateCardAsync(CardDto card)
@@ -64,6 +67,16 @@ namespace CardManager.Application.Services
 
             foreach (var card in cards)
             {
+                switch (card.CardType)
+                {
+                    case "MATRIZ":
+                        card.CardType = CardType.DespesasMatriz.ToString();
+                        break;
+                    case "FILIAL":
+                        card.CardType = CardType.DespesasFilial.ToString();
+                        break;
+                }
+
                 await CreateCardAsync(card);
             }
         }
@@ -82,13 +95,7 @@ namespace CardManager.Application.Services
 
         public async Task<List<Card>> GetAllByType(CardType type)
         {
-            var typeString = type.ToString();
-
-            if (!Enum.TryParse<CardType>(typeString, out var cardType))
-            {
-                throw new Exception(Errors.InvalidCardType(typeString));
-            }
-
+            var cardType = CheckCardType.IsCardValid(type.ToString());
             return await _cardRepository.GetCardsByType(cardType);
         }
 
@@ -98,9 +105,9 @@ namespace CardManager.Application.Services
             return card;
         }
 
-        public async Task UpdateCardAsync(Guid id, CardDto card)
+        public async Task UpdateCardAsync(Guid id, UpdateCardDto card)
         {
-            var validationResult = await _cardValidator.ValidateAsync(card);
+            var validationResult = await _updatedCardValidator.ValidateAsync(card);
 
             if (!validationResult.IsValid)
             {

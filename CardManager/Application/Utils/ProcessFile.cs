@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using CardManager.Presentation.DTO;
+using CardManager.Application.DTO;
 using CsvHelper;
 
 namespace CardManager.Application.Utils
@@ -10,6 +10,7 @@ namespace CardManager.Application.Utils
         {
             var reader = new StreamReader(file.OpenReadStream());
             var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+            csvReader.Context.RegisterClassMap<CsvCardMapper>();
             var cards = csvReader.GetRecords<CardDto>().ToList();
             return cards;
         }

@@ -1,6 +1,4 @@
-﻿using CardManager.Domain.Enums;
-
-namespace CardManager.Presentation.DTO
+﻿namespace CardManager.Application.DTO
 {
     public class CardDto
     {
