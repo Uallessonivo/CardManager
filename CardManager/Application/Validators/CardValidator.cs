@@ -1,5 +1,4 @@
 ﻿using CardManager.Application.DTO;
-using CardManager.Domain.Entities;
 using FluentValidation;
 
 namespace CardManager.Application.Validators
