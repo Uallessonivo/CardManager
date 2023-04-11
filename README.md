@@ -1,6 +1,6 @@
 # Card Manager
 
-Card Manager é uma aplicação para gerenciar cartões.
+Card Manager Ã© uma aplicaÃ§Ã£o para gerenciar cartÃµes.
 
 # Tecnologias
 
@@ -13,23 +13,12 @@ Card Manager é uma aplicação para gerenciar cartões.
 
 # Arquitetura
 
-A aplicação segue a arquitetura limpa (Clean Architecture), onde temos as seguintes camadas:
+A aplicaÃ§Ã£o segue a arquitetura limpa (Clean Architecture), onde temos as seguintes camadas:
 
 * Presentation
 * Application
 * Domain
 * Infrastructure
-
-# Como executar a aplicação
-
-* Clone o repositório: git clone https://github.com/seu-usuario/card-manager.git
-* Execute o comando docker-compose up para subir o banco de dados PostgreSQL.
-* Com o banco de dados rodando, execute a aplicação com o comando dotnet 
-```
-run --project src/Presentation/CardManager.Api/CardManager.Api.csproj.
-```
-* Acesse a url https://localhost:5001/swagger para visualizar a documentação da API.
-
 
 # Autor
 
