@@ -8,11 +8,9 @@ namespace CardManager.Application.Validators
         public CardValidator()
         {
             RuleFor(c => c.CardOwnerCpf)
-                .NotEmpty().WithMessage("O CPF não pode estar vazio.")
-                .Length(11).WithMessage("O CPF deve conter 11 dígitos.");
+                .NotEmpty().WithMessage("O CPF não pode estar vazio.");
             RuleFor(c => c.CardSerial)
-                .NotEmpty().WithMessage("O Serial não pode estar vazio.")
-                .Length(15).WithMessage("O Serial deve conter 15 dígitos.");
+                .NotEmpty().WithMessage("O Serial não pode estar vazio.");
             RuleFor(c => c.CardOwnerName)
                 .NotEmpty().WithMessage("O nome não pode estar vazio.");
             RuleFor(c => c.CardType)

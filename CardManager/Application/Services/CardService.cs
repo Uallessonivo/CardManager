@@ -70,10 +70,10 @@ namespace CardManager.Application.Services
                 switch (card.CardType)
                 {
                     case "MATRIZ":
-                        card.CardType = CardType.DespesasMatriz.ToString();
+                        card.CardType = CardType.MATRIZ.ToString();
                         break;
                     case "FILIAL":
-                        card.CardType = CardType.DespesasFilial.ToString();
+                        card.CardType = CardType.FILIAL.ToString();
                         break;
                 }
 
