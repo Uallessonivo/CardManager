@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CardManager.Migrations
 {
-    [DbContext(typeof(CardManagerDbContextInMemory))]
+    [DbContext(typeof(CardManagerDbContext))]
     [Migration("20230324113404_initial-migration")]
     partial class initialmigration
     {

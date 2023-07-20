@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CardManager.Infrastructure.Persistence
 {
-    public class CardManagerDbContextInMemory : DbContext
+    public class CardManagerDbContext : DbContext
     {
-        public CardManagerDbContextInMemory(DbContextOptions options) : base(options)
+        public CardManagerDbContext(DbContextOptions options) : base(options)
         {
         }
 

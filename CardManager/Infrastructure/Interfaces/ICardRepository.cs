@@ -9,6 +9,7 @@ namespace CardManager.Infrastructure.Interfaces
         Task<List<Card>> GetCardsByType(CardType type);
         Task<Card?> GetCardById(Guid id);
         Task<Card?> GetCardByCpfOwner(string cpf);
+        Task<Card?> GetCardBySerialNumber(string serial);
         Task CreateCard(Card card);
         Task UpdateCard(Card card);
         Task DeleteCard(Card card);

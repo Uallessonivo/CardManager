@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CardManager.Migrations
 {
-    [DbContext(typeof(CardManagerDbContextInMemory))]
+    [DbContext(typeof(CardManagerDbContext))]
     partial class CardManagerDbContextInMemoryModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

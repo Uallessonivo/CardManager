@@ -8,9 +8,9 @@ namespace CardManager.Infrastructure.Repositories
 {
     public class CardRepository : ICardRepository
     {
-        private readonly CardManagerDbContextInMemory _dbContext;
+        private readonly CardManagerDbContext _dbContext;
 
-        public CardRepository(CardManagerDbContextInMemory dbContext)
+        public CardRepository(CardManagerDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -19,6 +19,12 @@ namespace CardManager.Infrastructure.Repositories
         {
             return await _dbContext.Cards
                 .FirstOrDefaultAsync(x => x.CardOwnerCpf == cpf);
+        }
+
+        public async Task<Card?> GetCardBySerialNumber(string serial)
+        {
+            return await _dbContext.Cards
+                .FirstOrDefaultAsync(x => x.CardSerial == serial);
         }
 
         public async Task CreateCard(Card card)

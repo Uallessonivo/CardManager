@@ -37,7 +37,7 @@ namespace CardManager.Presentation.Controllers
             {
                 var card = await _cardService.GetByIdAsync(id);
                 return Ok(card);
-            } 
+            }
             catch (Exception ex)
             {
                 return StatusCode(NotFound().StatusCode, ex.Message);
@@ -73,12 +73,23 @@ namespace CardManager.Presentation.Controllers
         }
 
         [HttpPost("upload/seed-database")]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public async Task<IActionResult> UploadFileAndSeedDatabase(IFormFile file)
         {
             try
             {
-                await _cardService.SeedDatabaseTask(file);
-                return Ok();
+                var failedCards = await _cardService.SeedDatabaseTask(file);
+
+                if (failedCards.Count > 0)
+                {
+                    var response = new SeedDatabaseResponseDto
+                    {
+                        FailedCards = failedCards,
+                        Message = "Alguns cartões não foram inseridos na base de dados."
+                    };
+                    return Ok(response);
+                }
+
+                return Ok("Todos os cartões foram inseridos com sucesso.");
             }
             catch (Exception ex)
             {
@@ -87,7 +98,7 @@ namespace CardManager.Presentation.Controllers
         }
 
         [HttpPost("update/{id}")]
-        public async Task<IActionResult> UpdateCard([FromRoute] Guid id,[FromBody] UpdateCardDto updateCardDto)
+        public async Task<IActionResult> UpdateCard([FromRoute] Guid id, [FromBody] UpdateCardDto updateCardDto)
         {
             try
             {

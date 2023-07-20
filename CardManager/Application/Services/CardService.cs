@@ -34,12 +34,7 @@ namespace CardManager.Application.Services
                 throw new Exception(Errors.InvalidFields(string.Join(", ", errors)));
             }
 
-            var cardExists = await _cardRepository.GetCardByCpfOwner(card.CardOwnerCpf);
-
-            if (cardExists != null)
-            {
-                throw new Exception(Errors.CardAlreadyExists());
-            }
+            await CardExists(card);
 
             var cardType = CheckCardType.IsCardValid(card.CardType);
 
@@ -55,15 +50,26 @@ namespace CardManager.Application.Services
             await _cardRepository.CreateCard(newCard);
         }
 
+        public async Task CardExists(CardDto card)
+        {
+            var cardExists = await _cardRepository.GetCardBySerialNumber(card.CardSerial);
+
+            if (cardExists != null)
+            {
+                throw new Exception(Errors.CardAlreadyExists());
+            }
+        }
+
         public async Task DeleteCardAsync(Guid id)
         {
             var card = await GetByIdAsync(id) ?? throw new Exception(Errors.CardNotFound(id));
             await _cardRepository.DeleteCard(card);
         }
 
-        public async Task SeedDatabaseTask(IFormFile file)
+        public async Task<List<CardDto>?> SeedDatabaseTask(IFormFile file)
         {
             var cards = await ProcessFile.Parse(file);
+            var failedCard = new List<CardDto>();
 
             foreach (var card in cards)
             {
@@ -77,8 +83,17 @@ namespace CardManager.Application.Services
                         break;
                 }
 
-                await CreateCardAsync(card);
+                try
+                {
+                    await CreateCardAsync(card);
+                }
+                catch (Exception e)
+                {
+                    failedCard.Add(card);
+                }
             }
+            
+            return failedCard;
         }
 
         public async Task<List<Card>> GetAllAsync()
