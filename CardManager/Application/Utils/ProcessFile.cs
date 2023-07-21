@@ -7,7 +7,7 @@ namespace CardManager.Application.Utils
 {
     public static class ProcessFile
     {
-        public static async Task<List<CardDto>> Parse(IFormFile file)
+        public static List<CardDto> Parse(IFormFile file)
         {
             var reader = new StreamReader(file.OpenReadStream());
             var csvReader = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)

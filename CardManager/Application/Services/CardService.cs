@@ -66,9 +66,14 @@ namespace CardManager.Application.Services
             await _cardRepository.DeleteCard(card);
         }
 
-        public async Task<List<CardDto>?> SeedDatabaseTask(IFormFile file)
+        public async Task DeleteAllCardsAsync()
         {
-            var cards = await ProcessFile.Parse(file);
+            await _cardRepository.DeleteAllCards();
+        }
+
+        public async Task<SeedDatabaseResponseDto> SeedDatabaseTask(IFormFile file)
+        {
+            var cards = ProcessFile.Parse(file);
             var failedCard = new List<CardDto>();
 
             foreach (var card in cards)
@@ -92,8 +97,20 @@ namespace CardManager.Application.Services
                     failedCard.Add(card);
                 }
             }
-            
-            return failedCard;
+
+            if (failedCard.Count > 0)
+            {
+                return new SeedDatabaseResponseDto
+                {
+                    FailedCards = failedCard,
+                    Message = "Os dados desses cartões não foram salvos no sistema."
+                };
+            }
+
+            return new SeedDatabaseResponseDto
+            {
+                Message = "Todos os cartões foram salvos com êxito no banco de dados."
+            };
         }
 
         public async Task<List<Card>> GetAllAsync()

@@ -13,5 +13,6 @@ namespace CardManager.Infrastructure.Interfaces
         Task CreateCard(Card card);
         Task UpdateCard(Card card);
         Task DeleteCard(Card card);
+        Task DeleteAllCards();
     }
 }

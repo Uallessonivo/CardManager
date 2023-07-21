@@ -10,7 +10,7 @@ namespace CardManager.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<CardManagerDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(configuration.GetConnectionString("DevelopConnection")));
             services.AddScoped<ICardRepository, CardRepository>();
             return services;
         }

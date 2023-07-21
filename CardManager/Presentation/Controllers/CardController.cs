@@ -57,6 +57,20 @@ namespace CardManager.Presentation.Controllers
                 return StatusCode(NotFound().StatusCode, ex.Message);
             }
         }
+        
+        [HttpGet("filter/owner/{owner}")]
+        public async Task<IActionResult> GetCardByOwnerCpf([FromRoute] string owner)
+        {
+            try
+            {
+                var cards = await _cardService.GetByOwnerCpfAsync(owner);
+                return Ok(cards);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(NotFound().StatusCode, ex.Message);
+            }
+        }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateCard([FromBody] CardDto cardDto)
@@ -77,19 +91,8 @@ namespace CardManager.Presentation.Controllers
         {
             try
             {
-                var failedCards = await _cardService.SeedDatabaseTask(file);
-
-                if (failedCards.Count > 0)
-                {
-                    var response = new SeedDatabaseResponseDto
-                    {
-                        FailedCards = failedCards,
-                        Message = "Alguns cartões não foram inseridos na base de dados."
-                    };
-                    return Ok(response);
-                }
-
-                return Ok("Todos os cartões foram inseridos com sucesso.");
+                var response = await _cardService.SeedDatabaseTask(file);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -124,18 +127,18 @@ namespace CardManager.Presentation.Controllers
                 return StatusCode(BadRequest().StatusCode, ex.Message);
             }
         }
-
-        [HttpGet("filter/owner/{owner}")]
-        public async Task<IActionResult> GetCardByOwnerCpf([FromRoute] string owner)
+        
+        [HttpDelete("delete/all")]
+        public async Task<IActionResult> DeleteAllCards()
         {
             try
             {
-                var cards = await _cardService.GetByOwnerCpfAsync(owner);
-                return Ok(cards);
+                await _cardService.DeleteAllCardsAsync();
+                return Ok("Todos os cartões foram apagados da base.");
             }
             catch (Exception ex)
             {
-                return StatusCode(NotFound().StatusCode, ex.Message);
+                return StatusCode(BadRequest().StatusCode, ex.Message);
             }
         }
     }

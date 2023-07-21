@@ -14,6 +14,7 @@ namespace CardManager.Application.Interfaces
         Task CardExists(CardDto card);
         Task UpdateCardAsync(Guid id, UpdateCardDto card);
         Task DeleteCardAsync(Guid id);
-        Task<List<CardDto>?> SeedDatabaseTask(IFormFile file);
+        Task DeleteAllCardsAsync();
+        Task<SeedDatabaseResponseDto> SeedDatabaseTask(IFormFile file);
     }
 }

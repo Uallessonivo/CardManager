@@ -1,5 +1,4 @@
 ﻿using CardManager.Application.DTO;
-using CardManager.Domain.Enums;
 using CsvHelper.Configuration;
 
 namespace CardManager.Application.Utils;

@@ -14,6 +14,25 @@ namespace CardManager.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
+        
+        public async Task<List<Card>> GetAll()
+        {
+            return await _dbContext.Cards
+                .ToListAsync();
+        }
+
+        public async Task<Card?> GetCardById(Guid id)
+        {
+            return await _dbContext.Cards
+                .FirstOrDefaultAsync(x => x.CardId == id);
+        }
+
+        public async Task<List<Card>> GetCardsByType(CardType type)
+        {
+            return await _dbContext.Cards
+                .Where(x => x.CardType == type)
+                .ToListAsync();
+        }
 
         public async Task<Card?> GetCardByCpfOwner(string cpf)
         {
@@ -38,26 +57,14 @@ namespace CardManager.Infrastructure.Repositories
             _dbContext.Cards.Remove(card);
             await _dbContext.SaveChangesAsync();
         }
-
-        public async Task<List<Card>> GetAll()
+        
+        public async Task DeleteAllCards()
         {
-            return await _dbContext.Cards
-                .ToListAsync();
+            var cards = await _dbContext.Cards.ToListAsync();
+            _dbContext.Cards.RemoveRange(cards);
+            await _dbContext.SaveChangesAsync();
         }
-
-        public async Task<Card?> GetCardById(Guid id)
-        {
-            return await _dbContext.Cards
-                .FirstOrDefaultAsync(x => x.CardId == id);
-        }
-
-        public async Task<List<Card>> GetCardsByType(CardType type)
-        {
-            return await _dbContext.Cards
-                .Where(x => x.CardType == type)
-                .ToListAsync();
-        }
-
+        
         public async Task UpdateCard(Card card)
         {
             _dbContext.Cards.Update(card);
