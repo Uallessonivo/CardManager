@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CardManager.Migrations
 {
     [DbContext(typeof(CardManagerDbContext))]
-    [Migration("20230721110212_Initial")]
+    [Migration("20230721214824_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
