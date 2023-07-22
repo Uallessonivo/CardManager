@@ -5,6 +5,7 @@
 
 # Settings
 CardManager/appsettings.json
+.idea
 
 # User-specific files
 *.rsuser
