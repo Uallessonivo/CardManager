@@ -21,6 +21,14 @@ namespace CardManager.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Card>> GetAllPaginated(int pageNumber, int pageSize)
+        {
+            return await _dbContext.Cards
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
         public async Task<Card?> GetCardById(Guid id)
         {
             return await _dbContext.Cards

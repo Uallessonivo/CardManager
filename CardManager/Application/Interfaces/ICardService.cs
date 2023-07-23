@@ -7,6 +7,7 @@ namespace CardManager.Application.Interfaces
     public interface ICardService
     {
         Task<List<Card>> GetAllAsync();
+        Task<List<Card>> GetAllPaginatedAsync(int pageNumber, int pageSize);
         Task<Card> GetByIdAsync(Guid id);
         Task<Card> GetByOwnerCpfAsync(string cpf);
         Task<List<Card>> GetAllByType(CardType type);

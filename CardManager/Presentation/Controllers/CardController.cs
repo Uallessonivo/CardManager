@@ -30,6 +30,20 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
+        [HttpGet("list")]
+        public async Task<IActionResult> GetCards([FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var cards = await _cardService.GetAllPaginatedAsync(pageNumber, pageSize);
+                return Ok(cards);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(NotFound().StatusCode, ex.Message);
+            }
+        }
+
         [HttpGet("filter/id/{id}")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
         {

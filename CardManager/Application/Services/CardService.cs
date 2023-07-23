@@ -92,7 +92,7 @@ namespace CardManager.Application.Services
                 {
                     await CreateCardAsync(card);
                 }
-                catch (Exception e)
+                catch
                 {
                     failedCard.Add(card);
                 }
@@ -116,6 +116,12 @@ namespace CardManager.Application.Services
         public async Task<List<Card>> GetAllAsync()
         {
             var cards = await _cardRepository.GetAll();
+            return cards;
+        }
+
+        public async Task<List<Card>> GetAllPaginatedAsync(int pageNumber = 1, int pageSize = 10)
+        {
+            var cards = await _cardRepository.GetAllPaginated(pageNumber, pageSize);
             return cards;
         }
 

@@ -6,6 +6,7 @@ namespace CardManager.Infrastructure.Interfaces
     public interface ICardRepository
     {
         Task<List<Card>> GetAll();
+        Task<List<Card>> GetAllPaginated(int pageNumber, int pageSize);
         Task<List<Card>> GetCardsByType(CardType type);
         Task<Card?> GetCardById(Guid id);
         Task<Card?> GetCardByCpfOwner(string cpf);
