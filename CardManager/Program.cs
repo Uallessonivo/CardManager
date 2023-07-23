@@ -16,10 +16,19 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseSwagger();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseSwaggerUI(swagger =>
+    {
+        swagger.SwaggerEndpoint("swagger/v1/swagger.json", "CardManager Api");
+        swagger.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();
