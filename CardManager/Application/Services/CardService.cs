@@ -81,13 +81,18 @@ namespace CardManager.Application.Services
 
             foreach (var card in cards)
             {
-                switch (card.CardType)
+                if (card.CardStatus == "Cancelado")
                 {
-                    case "MATRIZ":
-                        card.CardType = CardType.MATRIZ.ToString();
+                    continue;
+                }
+
+                switch (card.CardType.Split(" ").First())
+                {
+                    case "Despesas":
+                        card.CardType = CardType.Despesas.ToString();
                         break;
-                    case "FILIAL":
-                        card.CardType = CardType.FILIAL.ToString();
+                    case "Incentivo":
+                        card.CardType = CardType.Incentivo.ToString();
                         break;
                 }
 
@@ -146,13 +151,13 @@ namespace CardManager.Application.Services
             return card;
         }
 
-        public async Task<string> GenerateReport()
+        public async Task<string> GenerateReport(CardType type)
         {
-            var cards = await _cardRepository.GetAll();
+            var cards = await _cardRepository.GetCardsByType(type);
 
             var data = new List<string[]>
             {
-                new string[] { "Serial", "Cpf", "Value", "Name"}
+                new string[] { "Numero de Serie", "CPF", "Valor da Carga", "Observacao" }
             };
 
             foreach (var card in cards)
@@ -160,8 +165,7 @@ namespace CardManager.Application.Services
                 var row = new string[]
                 {
                     card.CardSerial.PadLeft(15, '0'),
-                    card.CardOwnerCpf.Replace(".", "")
-                        .Replace("-", "").PadLeft(11, '0'),
+                    card.CardOwnerCpf.Replace(".", "").Replace("-", "").PadLeft(11, '0'),
                     "",
                     card.CardOwnerName.Substring(0, 35)
                 };
@@ -191,6 +195,7 @@ namespace CardManager.Application.Services
             }
 
             var result = await GetByIdAsync(id) ?? throw new Exception(Errors.CardNotFound(id));
+
             var updatedCard = new Card
             {
                 CardId = result.CardId,

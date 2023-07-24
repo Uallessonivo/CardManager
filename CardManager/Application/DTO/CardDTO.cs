@@ -6,5 +6,6 @@
         public string? CardOwnerName { get; set; }
         public string? CardOwnerCpf { get; set; }
         public string? CardType { get; set; }
+        public string? CardStatus { get; set; }
     }
 }

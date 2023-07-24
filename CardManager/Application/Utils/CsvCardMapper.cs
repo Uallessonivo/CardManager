@@ -10,6 +10,7 @@ public sealed class CsvCardMapper : ClassMap<CardDto>
         Map(c => c.CardSerial).Index(1);
         Map(c => c.CardOwnerCpf).Index(2);
         Map(c => c.CardOwnerName).Index(3);
-        Map(c => c.CardType).Index(4);
+        Map(c => c.CardType).Index(6);
+        Map(c => c.CardStatus).Index(5);
     }
 }

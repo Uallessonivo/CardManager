@@ -72,7 +72,7 @@ namespace CardManager.Presentation.Controllers
                 return StatusCode(NotFound().StatusCode, ex.Message);
             }
         }
-        
+
         [HttpGet("filter-card-cpf")]
         public async Task<IActionResult> GetCardByOwnerCpf([FromQuery] string owner)
         {
@@ -88,11 +88,11 @@ namespace CardManager.Presentation.Controllers
         }
 
         [HttpGet("generate-report")]
-        public async Task<IActionResult> DownloadReport()
+        public async Task<IActionResult> DownloadReport([FromQuery] CardType type)
         {
             try
             {
-                var csvData = await _cardService.GenerateReport();
+                var csvData = await _cardService.GenerateReport(type);
                 var bytes = Encoding.UTF8.GetBytes(csvData);
                 var stream = new MemoryStream(bytes);
                 var contentType = "text/csv";
@@ -161,7 +161,7 @@ namespace CardManager.Presentation.Controllers
                 return StatusCode(BadRequest().StatusCode, ex.Message);
             }
         }
-        
+
         [HttpDelete("delete-cards/all")]
         public async Task<IActionResult> DeleteAllCards()
         {

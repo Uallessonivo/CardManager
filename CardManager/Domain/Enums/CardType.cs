@@ -2,7 +2,7 @@
 {
     public enum CardType
     {
-        MATRIZ,
-        FILIAL
+        Despesas,
+        Incentivo
     }
 }
