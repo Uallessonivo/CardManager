@@ -1,5 +1,6 @@
 ﻿using CardManager.Application.DTO;
 using CardManager.Application.Interfaces;
+using CardManager.Application.Responses;
 using CardManager.Application.Utils;
 using CardManager.Application.Validators;
 using CardManager.Domain.Entities;
@@ -63,21 +64,10 @@ namespace CardManager.Application.Services
             }
         }
 
-        public async Task DeleteCardAsync(Guid id)
-        {
-            var card = await GetByIdAsync(id) ?? throw new Exception(Errors.CardNotFound(id));
-            await _cardRepository.DeleteCard(card);
-        }
-
-        public async Task DeleteAllCardsAsync()
-        {
-            await _cardRepository.DeleteAllCards();
-        }
-
-        public async Task<SeedDatabaseResponseDto> SeedDatabaseTask(IFormFile file)
+        public async Task<SeedDatabaseResponse> SeedDatabaseTask(IFormFile file)
         {
             var cards = ProcessFile.Parse(file);
-            var failedCard = new List<CardDto>();
+            var failedCards = new List<FailedCardResponse>();
 
             foreach (var card in cards)
             {
@@ -86,36 +76,37 @@ namespace CardManager.Application.Services
                     continue;
                 }
 
-                switch (card.CardType.Split(" ").First())
-                {
-                    case "Despesas":
-                        card.CardType = CardType.Despesas.ToString();
-                        break;
-                    case "Incentivo":
-                        card.CardType = CardType.Incentivo.ToString();
-                        break;
-                }
+                card.CardType = card.CardType.Split(" ").First();
 
                 try
                 {
                     await CreateCardAsync(card);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    failedCard.Add(card);
+                    var cardError = new FailedCardResponse
+                    {
+                        ErrorMessage = ex.Message,
+                        CardOwnerCpf = card.CardOwnerCpf ?? "N/A",
+                        CardOwnerName = card.CardOwnerName ?? "N/A",
+                        CardSerialNumber = card.CardSerial ?? "N/A",
+                        CardType = card.CardType ?? "N/A"
+                    };
+
+                    failedCards.Add(cardError);
                 }
             }
 
-            if (failedCard.Count > 0)
+            if (failedCards.Count > 0)
             {
-                return new SeedDatabaseResponseDto
+                return new SeedDatabaseResponse
                 {
-                    FailedCards = failedCard,
+                    FailedCards = failedCards,
                     Message = "Os dados desses cartões não foram salvos no sistema."
                 };
             }
 
-            return new SeedDatabaseResponseDto
+            return new SeedDatabaseResponse
             {
                 Message = "Todos os cartões foram salvos com êxito no banco de dados."
             };
@@ -206,6 +197,17 @@ namespace CardManager.Application.Services
             };
 
             await _cardRepository.UpdateCard(updatedCard);
+        }
+
+        public async Task DeleteCardAsync(Guid id)
+        {
+            var card = await GetByIdAsync(id) ?? throw new Exception(Errors.CardNotFound(id));
+            await _cardRepository.DeleteCard(card);
+        }
+
+        public async Task DeleteAllCardsAsync()
+        {
+            await _cardRepository.DeleteAllCards();
         }
     }
 }

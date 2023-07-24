@@ -1,4 +1,5 @@
 ﻿using CardManager.Application.DTO;
+using CardManager.Application.Responses;
 using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
 
@@ -17,6 +18,6 @@ namespace CardManager.Application.Interfaces
         Task UpdateCardAsync(Guid id, UpdateCardDto card);
         Task DeleteCardAsync(Guid id);
         Task DeleteAllCardsAsync();
-        Task<SeedDatabaseResponseDto> SeedDatabaseTask(IFormFile file);
+        Task<SeedDatabaseResponse> SeedDatabaseTask(IFormFile file);
     }
 }
