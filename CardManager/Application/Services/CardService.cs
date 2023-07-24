@@ -6,7 +6,10 @@ using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
 using CardManager.Domain.Errors;
 using CardManager.Infrastructure.Interfaces;
+using CsvHelper;
+using CsvHelper.Configuration;
 using FluentValidation;
+using System.Globalization;
 
 namespace CardManager.Application.Services
 {
@@ -141,6 +144,40 @@ namespace CardManager.Application.Services
         {
             var card = await _cardRepository.GetCardById(id) ?? throw new Exception(Errors.CardNotFound(id));
             return card;
+        }
+
+        public async Task<string> GenerateReport()
+        {
+            var cards = await _cardRepository.GetAll();
+
+            var data = new List<string[]>
+            {
+                new string[] { "Serial", "Cpf", "Value", "Name"}
+            };
+
+            foreach (var card in cards)
+            {
+                var row = new string[]
+                {
+                    card.CardSerial.PadLeft(15, '0'),
+                    card.CardOwnerCpf.Replace(".", "")
+                        .Replace("-", "").PadLeft(11, '0'),
+                    "",
+                    card.CardOwnerName.Substring(0, 35)
+                };
+
+                data.Add(row);
+            }
+
+            var writer = new StringWriter();
+            var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";"
+            });
+
+            csv.WriteRecord(data);
+
+            return writer.ToString();
         }
 
         public async Task UpdateCardAsync(Guid id, UpdateCardDto card)

@@ -2,6 +2,7 @@
 using CardManager.Application.Interfaces;
 using CardManager.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace CardManager.Presentation.Controllers
 {
@@ -16,7 +17,7 @@ namespace CardManager.Presentation.Controllers
             _cardService = cardService;
         }
 
-        [HttpGet("list")]
+        [HttpGet("list-cards")]
         public async Task<IActionResult> GetCards()
         {
             try
@@ -30,7 +31,7 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpGet("list")]
+        [HttpGet("list-cards-paginated")]
         public async Task<IActionResult> GetCards([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
             try
@@ -44,8 +45,8 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpGet("filter/id/{id}")]
-        public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
+        [HttpGet("filter-card-id")]
+        public async Task<IActionResult> GetByIdAsync([FromQuery] Guid id)
         {
             try
             {
@@ -58,8 +59,8 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpGet("filter/type/{type}")]
-        public async Task<IActionResult> GetCardByType([FromRoute] CardType type)
+        [HttpGet("filter-card-type")]
+        public async Task<IActionResult> GetCardByType([FromQuery] CardType type)
         {
             try
             {
@@ -72,8 +73,8 @@ namespace CardManager.Presentation.Controllers
             }
         }
         
-        [HttpGet("filter/owner/{owner}")]
-        public async Task<IActionResult> GetCardByOwnerCpf([FromRoute] string owner)
+        [HttpGet("filter-card-cpf")]
+        public async Task<IActionResult> GetCardByOwnerCpf([FromQuery] string owner)
         {
             try
             {
@@ -86,7 +87,26 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpPost("create")]
+        [HttpGet("generate-report")]
+        public async Task<IActionResult> DownloadReport()
+        {
+            try
+            {
+                var csvData = await _cardService.GenerateReport();
+                var bytes = Encoding.UTF8.GetBytes(csvData);
+                var stream = new MemoryStream(bytes);
+                var contentType = "text/csv";
+                var fileName = $"{DateTime.Now}-cartoes.csv";
+
+                return File(stream, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(NotFound().StatusCode, ex.Message);
+            }
+        }
+
+        [HttpPost("create-card")]
         public async Task<IActionResult> CreateCard([FromBody] CardDto cardDto)
         {
             try
@@ -100,7 +120,7 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpPost("upload/seed-database")]
+        [HttpPost("seed-database")]
         public async Task<IActionResult> UploadFileAndSeedDatabase(IFormFile file)
         {
             try
@@ -114,8 +134,8 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpPost("update/{id}")]
-        public async Task<IActionResult> UpdateCard([FromRoute] Guid id, [FromBody] UpdateCardDto updateCardDto)
+        [HttpPost("update-card")]
+        public async Task<IActionResult> UpdateCard([FromQuery] Guid id, [FromBody] UpdateCardDto updateCardDto)
         {
             try
             {
@@ -128,8 +148,8 @@ namespace CardManager.Presentation.Controllers
             }
         }
 
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteCard([FromRoute] Guid id)
+        [HttpDelete("delete-card")]
+        public async Task<IActionResult> DeleteCard([FromQuery] Guid id)
         {
             try
             {
@@ -142,7 +162,7 @@ namespace CardManager.Presentation.Controllers
             }
         }
         
-        [HttpDelete("delete/all")]
+        [HttpDelete("delete-cards/all")]
         public async Task<IActionResult> DeleteAllCards()
         {
             try
