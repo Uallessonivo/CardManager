@@ -8,10 +8,8 @@ using CardManager.Domain.Enums;
 using CardManager.Domain.Errors;
 using CardManager.Domain.Models;
 using CardManager.Infrastructure.Interfaces;
-using CsvHelper;
-using CsvHelper.Configuration;
 using FluentValidation;
-using System.Globalization;
+using System.Text;
 
 namespace CardManager.Application.Services
 {
@@ -143,17 +141,15 @@ namespace CardManager.Application.Services
             return card;
         }
 
-        public async Task<string> GenerateReport(string type)
+        public async Task<StringBuilder> GenerateReport(string type)
         {
             var cardType = CheckCardType.IsCardValid(type);
+
             var cards = await _cardRepository.GetCardsByType(cardType);
 
-            var header = new List<string[]>
-            {
-                new string[] { "Numero de Serie", "CPF", "Valor da Carga", "Observacao" }
-            };
+            var stringBuilder = new StringBuilder();
 
-            var data = new List<CardReportDataModel>();
+            stringBuilder.AppendLine("Numero de Serie; CPF; Valor da Carga; Observacao");
 
             foreach (var card in cards)
             {
@@ -165,19 +161,10 @@ namespace CardManager.Application.Services
                     CardOwnerName = card.CardOwnerName.Length > 35 ? card.CardOwnerName.Substring(0, 35) : card.CardOwnerName
                 };
 
-                data.Add(row);
+                stringBuilder.AppendLine($"{row.CardSerial}; {row.CardOwnerCpf}; {row.CardValue}; {row.CardOwnerName}");
             }
 
-            var writer = new StringWriter();
-            var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                Delimiter = ";"
-            });
-
-            csv.WriteRecords(header);
-            csv.WriteRecords(data);
-
-            return writer.ToString();
+            return stringBuilder;
         }
 
         public async Task UpdateCardAsync(Guid id, UpdateCardDto card)

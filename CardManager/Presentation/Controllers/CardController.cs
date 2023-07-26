@@ -88,22 +88,16 @@ namespace CardManager.Presentation.Controllers
         }
 
         [HttpGet("generate-report")]
-        public async Task<IActionResult> DownloadReport([FromQuery] string type)
+        public async Task<FileResult> DownloadReport([FromQuery] string type)
         {
-            try
-            {
-                var csvData = await _cardService.GenerateReport(type);
-                var bytes = Encoding.UTF8.GetBytes(csvData);
-                var stream = new MemoryStream(bytes);
-                var contentType = "text/csv";
-                var fileName = $"{DateTime.Now:yyyyMMdd}-{type}-cartoes.csv";
 
-                return File(stream, contentType, fileName);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(NotFound().StatusCode, ex.Message);
-            }
+            var csvData = await _cardService.GenerateReport(type);
+            var bytes = Encoding.UTF8.GetBytes(csvData.ToString());
+            var stream = new MemoryStream(bytes);
+            var contentType = "text/csv";
+            var fileName = $"{DateTime.Now:yyyyMMdd}-{type}.csv";
+
+            return File(stream, contentType, fileName);
         }
 
         [HttpPost("create-card")]
