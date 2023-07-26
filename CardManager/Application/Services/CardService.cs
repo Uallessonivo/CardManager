@@ -6,6 +6,7 @@ using CardManager.Application.Validators;
 using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
 using CardManager.Domain.Errors;
+using CardManager.Domain.Models;
 using CardManager.Infrastructure.Interfaces;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -142,23 +143,26 @@ namespace CardManager.Application.Services
             return card;
         }
 
-        public async Task<string> GenerateReport(CardType type)
+        public async Task<string> GenerateReport(string type)
         {
-            var cards = await _cardRepository.GetCardsByType(type);
+            var cardType = CheckCardType.IsCardValid(type);
+            var cards = await _cardRepository.GetCardsByType(cardType);
 
-            var data = new List<string[]>
+            var header = new List<string[]>
             {
                 new string[] { "Numero de Serie", "CPF", "Valor da Carga", "Observacao" }
             };
 
+            var data = new List<CardReportDataModel>();
+
             foreach (var card in cards)
             {
-                var row = new string[]
+                var row = new CardReportDataModel
                 {
-                    card.CardSerial.PadLeft(15, '0'),
-                    card.CardOwnerCpf.Replace(".", "").Replace("-", "").PadLeft(11, '0'),
-                    "",
-                    card.CardOwnerName.Substring(0, 35)
+                    CardSerial = card.CardSerial.PadLeft(15, '0'),
+                    CardOwnerCpf = card.CardOwnerCpf.Replace(".", "").Replace("-", "").PadLeft(11, '0'),
+                    CardValue = "",
+                    CardOwnerName = card.CardOwnerName.Length > 35 ? card.CardOwnerName.Substring(0, 35) : card.CardOwnerName
                 };
 
                 data.Add(row);
@@ -170,7 +174,8 @@ namespace CardManager.Application.Services
                 Delimiter = ";"
             });
 
-            csv.WriteRecord(data);
+            csv.WriteRecords(header);
+            csv.WriteRecords(data);
 
             return writer.ToString();
         }

@@ -7,7 +7,7 @@ namespace CardManager.Application.Validators
     {
         public static CardType IsCardValid(string cardTypeString)
         {
-            if (Enum.TryParse(cardTypeString, out CardType cardType))
+            if (Enum.TryParse(cardTypeString, true, out CardType cardType))
             {
                 return cardType;
             }

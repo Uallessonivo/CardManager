@@ -12,7 +12,7 @@ namespace CardManager.Application.Interfaces
         Task<Card> GetByIdAsync(Guid id);
         Task<Card> GetByOwnerCpfAsync(string cpf);
         Task<List<Card>> GetAllByType(CardType type);
-        Task<string> GenerateReport(CardType type);
+        Task<string> GenerateReport(string type);
         Task CreateCardAsync(CardDto card);
         Task CardExists(CardDto card);
         Task UpdateCardAsync(Guid id, UpdateCardDto card);

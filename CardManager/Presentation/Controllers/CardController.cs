@@ -88,7 +88,7 @@ namespace CardManager.Presentation.Controllers
         }
 
         [HttpGet("generate-report")]
-        public async Task<IActionResult> DownloadReport([FromQuery] CardType type)
+        public async Task<IActionResult> DownloadReport([FromQuery] string type)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace CardManager.Presentation.Controllers
                 var bytes = Encoding.UTF8.GetBytes(csvData);
                 var stream = new MemoryStream(bytes);
                 var contentType = "text/csv";
-                var fileName = $"{DateTime.Now}-cartoes.csv";
+                var fileName = $"{DateTime.Now:yyyyMMdd}-{type}-cartoes.csv";
 
                 return File(stream, contentType, fileName);
             }
