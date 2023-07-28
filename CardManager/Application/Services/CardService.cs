@@ -27,7 +27,7 @@ namespace CardManager.Application.Services
             _updatedCardValidator = updatedCardValidator;
         }
 
-        public async Task CreateCardAsync(CardDto card)
+        public async Task<Card> CreateCardAsync(CardDto card)
         {
             var validationResult = await _cardValidator.ValidateAsync(card);
 
@@ -51,9 +51,11 @@ namespace CardManager.Application.Services
             };
 
             await _cardRepository.CreateCard(newCard);
+
+            return newCard;
         }
 
-        public async Task CardExists(CardDto card)
+        public async Task<bool> CardExists(CardDto card)
         {
             var cardExists = await _cardRepository.GetCardBySerialNumber(card.CardSerial);
 
@@ -61,6 +63,8 @@ namespace CardManager.Application.Services
             {
                 throw new Exception(Errors.CardAlreadyExists());
             }
+
+            return false;
         }
 
         public async Task<SeedDatabaseResponse> SeedDatabaseTask(IFormFile file)
@@ -111,6 +115,32 @@ namespace CardManager.Application.Services
             };
         }
 
+        public async Task<StringBuilder> GenerateReport(string type)
+        {
+            var cardType = CheckCardType.IsCardValid(type);
+
+            var cards = await _cardRepository.GetCardsByType(cardType);
+
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine("Numero de Serie; CPF; Valor da Carga; Observacao");
+
+            foreach (var card in cards)
+            {
+                var row = new CardReportDataModel
+                {
+                    CardSerial = card.CardSerial.PadLeft(15, '0'),
+                    CardOwnerCpf = card.CardOwnerCpf.Replace(".", "").Replace("-", "").PadLeft(11, '0'),
+                    CardValue = "",
+                    CardOwnerName = card.CardOwnerName.Length > 35 ? card.CardOwnerName.Substring(0, 35) : card.CardOwnerName
+                };
+
+                stringBuilder.AppendLine($"{row.CardSerial}; {row.CardOwnerCpf}; {row.CardValue}; {row.CardOwnerName}");
+            }
+
+            return stringBuilder;
+        }
+
         public async Task<List<Card>> GetAllAsync()
         {
             var cards = await _cardRepository.GetAll();
@@ -141,33 +171,7 @@ namespace CardManager.Application.Services
             return card;
         }
 
-        public async Task<StringBuilder> GenerateReport(string type)
-        {
-            var cardType = CheckCardType.IsCardValid(type);
-
-            var cards = await _cardRepository.GetCardsByType(cardType);
-
-            var stringBuilder = new StringBuilder();
-
-            stringBuilder.AppendLine("Numero de Serie; CPF; Valor da Carga; Observacao");
-
-            foreach (var card in cards)
-            {
-                var row = new CardReportDataModel
-                {
-                    CardSerial = card.CardSerial.PadLeft(15, '0'),
-                    CardOwnerCpf = card.CardOwnerCpf.Replace(".", "").Replace("-", "").PadLeft(11, '0'),
-                    CardValue = "",
-                    CardOwnerName = card.CardOwnerName.Length > 35 ? card.CardOwnerName.Substring(0, 35) : card.CardOwnerName
-                };
-
-                stringBuilder.AppendLine($"{row.CardSerial}; {row.CardOwnerCpf}; {row.CardValue}; {row.CardOwnerName}");
-            }
-
-            return stringBuilder;
-        }
-
-        public async Task UpdateCardAsync(Guid id, UpdateCardDto card)
+        public async Task<Card> UpdateCardAsync(Guid id, UpdateCardDto card)
         {
             var validationResult = await _updatedCardValidator.ValidateAsync(card);
 
@@ -189,6 +193,8 @@ namespace CardManager.Application.Services
             };
 
             await _cardRepository.UpdateCard(updatedCard);
+
+            return updatedCard;
         }
 
         public async Task DeleteCardAsync(Guid id)

@@ -1,7 +1,7 @@
 ﻿using CardManager.Domain.Entities;
 using CardManager.Domain.Enums;
-using CardManager.Infrastructure.Persistence;
 using CardManager.Infrastructure.Interfaces;
+using CardManager.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace CardManager.Infrastructure.Repositories
@@ -14,7 +14,7 @@ namespace CardManager.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-        
+
         public async Task<List<Card>> GetAll()
         {
             return await _dbContext.Cards
@@ -56,8 +56,8 @@ namespace CardManager.Infrastructure.Repositories
 
         public async Task CreateCard(Card card)
         {
-           await _dbContext.Cards.AddAsync(card);
-           await _dbContext.SaveChangesAsync();
+            await _dbContext.Cards.AddAsync(card);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteCard(Card card)
@@ -65,14 +65,14 @@ namespace CardManager.Infrastructure.Repositories
             _dbContext.Cards.Remove(card);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         public async Task DeleteAllCards()
         {
             var cards = await _dbContext.Cards.ToListAsync();
             _dbContext.Cards.RemoveRange(cards);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         public async Task UpdateCard(Card card)
         {
             _dbContext.Cards.Update(card);

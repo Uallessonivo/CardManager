@@ -14,9 +14,9 @@ namespace CardManager.Application.Interfaces
         Task<Card> GetByOwnerCpfAsync(string cpf);
         Task<List<Card>> GetAllByType(CardType type);
         Task<StringBuilder> GenerateReport(string type);
-        Task CreateCardAsync(CardDto card);
-        Task CardExists(CardDto card);
-        Task UpdateCardAsync(Guid id, UpdateCardDto card);
+        Task<Card> CreateCardAsync(CardDto card);
+        Task<bool> CardExists(CardDto card);
+        Task<Card> UpdateCardAsync(Guid id, UpdateCardDto card);
         Task DeleteCardAsync(Guid id);
         Task DeleteAllCardsAsync();
         Task<SeedDatabaseResponse> SeedDatabaseTask(IFormFile file);

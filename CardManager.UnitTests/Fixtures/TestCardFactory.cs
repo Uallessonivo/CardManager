@@ -26,15 +26,15 @@ namespace CardManager.UnitTests.Fixtures
             };
         }
 
-        public static IEnumerable<Card> FakeCardsWithError()
+        public static IEnumerable<Card> FakeCardsWithErrors()
         {
             return new List<Card>
             {
                 new Card {
                     CardId = Guid.NewGuid(),
-                    CardOwnerCpf = "000000000000",
-                    CardOwnerName = "THIS IS THE NAME",
-                    CardSerial = "00000000000000000000",
+                    CardOwnerCpf = "",
+                    CardOwnerName = "",
+                    CardSerial = "",
                     CardType = CardType.Despesas
                 },
                 new Card {
