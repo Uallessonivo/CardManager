@@ -14,6 +14,8 @@ namespace CardManager.Application.Validators
             RuleFor(c => c.CardOwnerName)
                 .NotEmpty().WithMessage("O nome não pode estar vazio.");
             RuleFor(c => c.CardType)
+                .NotEmpty().WithMessage("O tipo não pode estar vazio.");   
+            RuleFor(c => c.CardType)
                 .NotEmpty().WithMessage("O tipo não pode estar vazio.");
         }
     }
