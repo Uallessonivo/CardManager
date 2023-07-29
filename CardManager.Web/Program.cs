@@ -1,7 +1,12 @@
+using CardManager.Web.Services;
+using CardManager.Web.Services.IService;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ICardService, CardService>();
 
 var app = builder.Build();
 
@@ -17,7 +22,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(
