@@ -5,7 +5,9 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardManager", "CardManager\CardManager.csproj", "{EC886F5C-97FD-496C-92F9-DFAF00A60383}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardManager.UnitTests", "CardManager.UnitTests\CardManager.UnitTests.csproj", "{7AC88972-8D47-4D39-932C-66936E919B83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardManager.UnitTests", "CardManager.UnitTests\CardManager.UnitTests.csproj", "{7AC88972-8D47-4D39-932C-66936E919B83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardManager.Web", "CardManager.Web\CardManager.Web.csproj", "{EB7C4B38-C453-4EF4-B6E0-34D49ED90DED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7AC88972-8D47-4D39-932C-66936E919B83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AC88972-8D47-4D39-932C-66936E919B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AC88972-8D47-4D39-932C-66936E919B83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB7C4B38-C453-4EF4-B6E0-34D49ED90DED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7C4B38-C453-4EF4-B6E0-34D49ED90DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB7C4B38-C453-4EF4-B6E0-34D49ED90DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB7C4B38-C453-4EF4-B6E0-34D49ED90DED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
