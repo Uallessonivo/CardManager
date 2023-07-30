@@ -26,17 +26,16 @@ namespace CardManager.Web.Controllers
                 var success = await _cardService.CreateNewCardAsync(newCardData);
                 if (success)
                 {
-                    // Cartão criado com sucesso
+                    TempData["success"] = "Cartão criado com sucesso!";
                     return RedirectToAction("CreateCard");
                 }
                 else
                 {
-                    // Trate o erro, exiba uma mensagem de erro ou redirecione para uma página de erro
+                    TempData["error"] = "Verifique os dados do cartão e tente novamente.";
                     return View();
                 }
             }
 
-            // Se os dados não forem válidos, retorne a mesma view para mostrar as mensagens de validação
             return View();
         }
 
@@ -46,24 +45,17 @@ namespace CardManager.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetCard(string cardSerial)
+        public async Task<IActionResult> GetCard(string filter)
         {
-            if (!string.IsNullOrEmpty(cardSerial))
+            if (!string.IsNullOrEmpty(filter))
             {
-                var card = await _cardService.GetCardBySerialAsync(cardSerial);
+                var card = await _cardService.GetCardAsync(filter);
                 if (card != null)
                 {
-                    // Cartão encontrado, faça algo com os dados do cartão, como exibir na view ou redirecionar para outra página
-                    return RedirectToAction("GetCard");
-                }
-                else
-                {
-                    // Cartão não encontrado
-                    ModelState.AddModelError(string.Empty, "Cartão não encontrado.");
+                    return View(card);
                 }
             }
 
-            // Se o número do cartão não foi fornecido ou não foi encontrado, retorne a mesma view para mostrar as mensagens de erro
             return View();
         }
 
@@ -73,24 +65,17 @@ namespace CardManager.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GenerateFile(IFormFile csvFile)
+        public async Task<IActionResult> GenerateFile(string cardType)
         {
-            if (csvFile != null && csvFile.Length > 0)
+            if (!string.IsNullOrEmpty(cardType))
             {
-                var success = await _cardService.UpdateDatabaseAsync(csvFile);
-                if (success)
-                {
-                    // Base de dados atualizada com sucesso
-                    return RedirectToAction("GenerateFile");
-                }
-                else
-                {
-                    // Trate o erro, exiba uma mensagem de erro ou redirecione para uma página de erro
-                    return View();
-                }
+                var result = await _cardService.GenerateReport(cardType);
+
+                TempData["success"] = "Arquivo gerado com sucesso!";
+
+                return View(result);
             }
 
-            // Se o arquivo não foi fornecido, retorne a mesma view para mostrar as mensagens de erro
             return View();
         }
 
@@ -105,12 +90,11 @@ namespace CardManager.Web.Controllers
             var success = await _cardService.UpdateDatabaseAsync(file);
             if (success)
             {
-                // Base de dados semeada com sucesso
+                TempData["success"] = "A base de dados foi atualizada com sucesso!";
                 return RedirectToAction("SeedDatabase");
             }
             else
             {
-                // Trate o erro, exiba uma mensagem de erro ou redirecione para uma página de erro
                 return View();
             }
         }
@@ -128,12 +112,11 @@ namespace CardManager.Web.Controllers
                 var success = await _cardService.DeleteCardAsync(cardSerial);
                 if (success)
                 {
-                    // Cartão apagado com sucesso
+                    TempData["success"] = "O cartão foi apagado da base com sucesso";
                     return RedirectToAction("DeleteCard");
                 }
                 else
                 {
-                    // Trate o erro, exiba uma mensagem de erro ou redirecione para uma página de erro
                     return View();
                 }
             }
@@ -148,7 +131,7 @@ namespace CardManager.Web.Controllers
             var success = await _cardService.DeleteAllCardsAsync();
             if (success)
             {
-                // Base de dados de cartões apagada com sucesso
+                TempData["success"] = "A base de cartões foi apagada com sucesso";
                 return RedirectToAction("DeleteCardBase");
             }
             else

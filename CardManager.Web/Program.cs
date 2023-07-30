@@ -1,11 +1,16 @@
 using CardManager.Web.Services;
 using CardManager.Web.Services.IService;
+using CardManager.Web.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Services Url
+BackendConn.CardManagerBackendUrl = builder.Configuration["BackendUrl:CardManager"]!;
+
+// Register services
 builder.Services.AddScoped<ICardService, CardService>();
 
 var app = builder.Build();
