@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews();
 BackendConn.CardManagerBackendUrl = builder.Configuration["BackendUrl:CardManager"]!;
 
 // Register services
+builder.Services.AddHttpClient<ICardService, CardService>();
 builder.Services.AddScoped<ICardService, CardService>();
 
 var app = builder.Build();

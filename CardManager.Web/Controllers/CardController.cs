@@ -29,13 +29,9 @@ namespace CardManager.Web.Controllers
                     TempData["success"] = "Cartão criado com sucesso!";
                     return RedirectToAction("CreateCard");
                 }
-                else
-                {
-                    TempData["error"] = "Verifique os dados do cartão e tente novamente.";
-                    return View();
-                }
             }
 
+            TempData["error"] = "Verifique os dados do cartão e tente novamente.";
             return View();
         }
 
@@ -69,11 +65,12 @@ namespace CardManager.Web.Controllers
         {
             if (!string.IsNullOrEmpty(cardType))
             {
-                var result = await _cardService.GenerateReport(cardType);
+                var result = await _cardService.GenerateCsvReport(cardType);
+                var contentType = "text/csv";
+                var fileName = $"{DateTime.Now:yyyyMMdd}-{cardType}.csv";
 
                 TempData["success"] = "Arquivo gerado com sucesso!";
-
-                return View(result);
+                return File(result, contentType, fileName);
             }
 
             return View();
@@ -93,10 +90,9 @@ namespace CardManager.Web.Controllers
                 TempData["success"] = "A base de dados foi atualizada com sucesso!";
                 return RedirectToAction("SeedDatabase");
             }
-            else
-            {
-                return View();
-            }
+
+            TempData["error"] = "Verifique o arquivo e tente novamente.";
+            return View();
         }
 
         public IActionResult DeleteCard()
@@ -115,13 +111,9 @@ namespace CardManager.Web.Controllers
                     TempData["success"] = "O cartão foi apagado da base com sucesso";
                     return RedirectToAction("DeleteCard");
                 }
-                else
-                {
-                    return View();
-                }
             }
 
-            // Se o número do cartão não foi fornecido, retorne a mesma view para mostrar as mensagens de erro
+            TempData["error"] = "Verifique o némero do cartão e tente novamente.";
             return View();
         }
 
@@ -134,11 +126,9 @@ namespace CardManager.Web.Controllers
                 TempData["success"] = "A base de cartões foi apagada com sucesso";
                 return RedirectToAction("DeleteCardBase");
             }
-            else
-            {
-                // Trate o erro, exiba uma mensagem de erro ou redirecione para uma página de erro
-                return View();
-            }
+
+            TempData["error"] = "Não foi possível apagar a base de cartães.";
+            return View();
         }
     }
 }

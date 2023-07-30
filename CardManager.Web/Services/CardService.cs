@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using CardManager.Web.Models.Dtos;
 using CardManager.Web.Services.IService;
+using CardManager.Web.Utility;
 
 namespace CardManager.Web.Services;
 
@@ -15,31 +16,49 @@ public class CardService : ICardService
 
     public async Task<bool> CreateNewCardAsync(CardDto newCardData)
     {
-        throw new NotImplementedException();
+        var result = await _httpClient
+            .PostAsJsonAsync(BackendConn.CardManagerBackendUrl + "api/card/create-card", newCardData);
+        return result.IsSuccessStatusCode;
     }
 
     public async Task<bool> UpdateDatabaseAsync(IFormFile fileData)
     {
-        throw new NotImplementedException();
+        var result = await _httpClient
+            .PostAsJsonAsync(BackendConn.CardManagerBackendUrl + "api/card/seed-database", fileData);
+        return result.IsSuccessStatusCode;
     }
 
-    public async Task<StringBuilder> GenerateReport(string cardType)
+    public async Task<byte[]?> GenerateCsvReport(string cardType)
     {
-        throw new NotImplementedException();
+        var result = await _httpClient
+                .GetAsync(BackendConn.CardManagerBackendUrl + "api/card/generate-report?type=" + cardType);
+        
+        if (!result.IsSuccessStatusCode)
+            return null;
+        
+        var resultContent = await result.Content.ReadAsByteArrayAsync();
+        return resultContent;
     }
 
     public async Task<CardDto> GetCardAsync(string filter)
     {
-        throw new NotImplementedException();
+        var result = await _httpClient
+            .GetFromJsonAsync<CardDto>(
+                BackendConn.CardManagerBackendUrl + "api/card/filter-card-cpf?owner=" + filter);
+        return result;
     }
 
     public async Task<bool> DeleteCardAsync(string cardSerial)
     {
-        throw new NotImplementedException();
+        var result = await _httpClient
+            .DeleteAsync(BackendConn.CardManagerBackendUrl + "api/card/delete-card-by?cardSerial=" + cardSerial);
+        return result.IsSuccessStatusCode;
     }
 
     public async Task<bool> DeleteAllCardsAsync()
     {
-        throw new NotImplementedException();
+        var result = await _httpClient
+            .DeleteAsync(BackendConn.CardManagerBackendUrl + "api/card/delete-all-cards");
+        return result.IsSuccessStatusCode;
     }
 }
