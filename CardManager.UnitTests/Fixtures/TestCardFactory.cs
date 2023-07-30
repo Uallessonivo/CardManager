@@ -47,7 +47,7 @@ namespace CardManager.UnitTests.Fixtures
                 new Card {
                     CardId = Guid.NewGuid(),
                     CardOwnerCpf = "000000000",
-                    CardOwnerName = "THIS NAME HAS MORE THAN 35 CARACTERS",
+                    CardOwnerName = "THIS NAME HAS MORE THAN 35 CHARACTERS",
                     CardSerial = "000000000000000",
                     CardType = CardType.Incentivo
                 }

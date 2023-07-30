@@ -13,10 +13,10 @@ namespace CardManager.Application.Validators
                 .NotEmpty().WithMessage("O Serial não pode estar vazio.");
             RuleFor(c => c.CardOwnerName)
                 .NotEmpty().WithMessage("O nome não pode estar vazio.");
+            RuleFor(c => c.CardStatus)
+                .NotEmpty().WithMessage("O status não pode estar vazio");
             RuleFor(c => c.CardType)
                 .NotEmpty().WithMessage("O tipo não pode estar vazio.");   
-            RuleFor(c => c.CardType)
-                .NotEmpty().WithMessage("O tipo não pode estar vazio.");
         }
     }
 }
