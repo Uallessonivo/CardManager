@@ -202,6 +202,12 @@ namespace CardManager.Application.Services
             var card = await GetByIdAsync(id) ?? throw new Exception(Errors.CardNotFound(id));
             await _cardRepository.DeleteCard(card);
         }
+        
+        public async Task DeleteCardAsync(string cardSerial)
+        {
+            var card = await _cardRepository.GetCardBySerialNumber(cardSerial) ?? throw new Exception(Errors.CardNotFound(cardSerial));
+            await _cardRepository.DeleteCard(card);
+        }
 
         public async Task DeleteAllCardsAsync()
         {

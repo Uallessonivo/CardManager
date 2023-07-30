@@ -155,8 +155,22 @@ namespace CardManager.Presentation.Controllers
                 return StatusCode(BadRequest().StatusCode, ex.Message);
             }
         }
+        
+        [HttpDelete("delete-card-by")]
+        public async Task<IActionResult> DeleteCard([FromQuery] string cardSerial)
+        {
+            try
+            {
+                await _cardService.DeleteCardAsync(cardSerial);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(BadRequest().StatusCode, ex.Message);
+            }
+        }
 
-        [HttpDelete("delete-cards/all")]
+        [HttpDelete("delete-all-cards")]
         public async Task<IActionResult> DeleteAllCards()
         {
             try
