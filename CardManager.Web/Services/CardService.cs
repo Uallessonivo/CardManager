@@ -1,5 +1,4 @@
-﻿using System.Text;
-using CardManager.Web.Models.Dtos;
+﻿using CardManager.Web.Models.Dtos;
 using CardManager.Web.Services.IService;
 using CardManager.Web.Utility;
 
@@ -40,11 +39,11 @@ public class CardService : ICardService
         return resultContent;
     }
 
-    public async Task<CardDto> GetCardAsync(string filter)
+    public async Task<CardDto> GetCardAsync(string owner)
     {
         var result = await _httpClient
             .GetFromJsonAsync<CardDto>(
-                BackendConn.CardManagerBackendUrl + "api/card/filter-card-cpf?owner=" + filter);
+                BackendConn.CardManagerBackendUrl + "api/card/owner-card-cpf?owner=" + owner);
         return result;
     }
 

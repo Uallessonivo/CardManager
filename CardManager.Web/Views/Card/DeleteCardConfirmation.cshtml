@@ -1,0 +1,28 @@
+﻿@model CardManager.Web.Models.Dtos.CardDto
+
+@{
+    ViewData["Title"] = "Confirmação de exclusão";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Confirmação de exclusão</h2>
+
+            <div>
+                <strong>Número do Serial:</strong> @Model.CardSerial <br />
+                <strong>Nome do Colaborador:</strong> @Model.CardOwnerName <br />
+                <strong>CPF do Colaborador:</strong> @Model.CardOwnerCpf <br />
+                <strong>Tipo do Cartão:</strong> @Model.CardType <br />
+            </div>
+
+            <form asp-controller="Card" asp-action="DeleteCardConfirmation" method="post">
+                <input asp-for="CardSerial" type="hidden" />
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                    <a class="btn btn-dark" href="/Card/DeleteCard">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

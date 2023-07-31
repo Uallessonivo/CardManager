@@ -2,7 +2,7 @@
     ViewData["Title"] = "Página inicial";
 }
 
-<div class="row row-cols-2">
+<div class="row row-cols-2" style="height: 80vh;">
     <div class="col-sm-6">
         <div class="card h-100 mb-4">
             <div class="card-body">
@@ -12,15 +12,13 @@
             </div>
         </div>
     </div>
-    
-    <!-- Outros botões e componentes da página -->
 
     <div class="col-sm-6">
         <div class="card h-100 mb-4">
             <div class="card-body">
                 <h5 class="card-title">Atualizar a base de dados</h5>
                 <p class="card-text">Este processo irá atualizar a base de dados. Envie o arquivo de cartões e todos eles serão inseridos na base.</p>
-                <a href="#" class="btn btn-success btn-block">Prosseguir</a>
+                <a asp-controller="Card" asp-action="SeedDatabase" class="btn btn-success btn-block">Prosseguir</a>
             </div>
         </div>
     </div>
@@ -30,7 +28,7 @@
             <div class="card-body">
                 <h5 class="card-title">Gerar arquivo de cartões</h5>
                 <p class="card-text">Este processo irá criar um arquivo no formato CSV contendo os dados de todos os cartões presentes na base de dados.</p>
-                <a href="#" class="btn btn-info btn-block">Prosseguir</a>
+                <a asp-controller="Card" asp-action="GenerateFile" class="btn btn-info btn-block">Prosseguir</a>
             </div>
         </div>
     </div>
@@ -40,7 +38,7 @@
             <div class="card-body">
                 <h5 class="card-title">Consultar cartão específico</h5>
                 <p class="card-text">Este processo irá pesquisar na base de dados um cartão específico com base nos dados informados.</p>
-                <a href="#" class="btn btn-secondary btn-block">Prosseguir</a>
+                <a asp-controller="Card" asp-action="GetCard" class="btn btn-secondary btn-block">Prosseguir</a>
             </div>
         </div>
     </div>
@@ -50,7 +48,7 @@
             <div class="card-body">
                 <h5 class="card-title">Apagar um cartão</h5>
                 <p class="card-text">Este processo irá apagar um cartão específico da base de dados.</p>
-                <a href="#" class="btn btn-danger btn-block">Prosseguir</a>
+                <a asp-controller="Card" asp-action="DeleteCard" class="btn btn-danger btn-block">Prosseguir</a>
             </div>
         </div>
     </div>
@@ -60,7 +58,7 @@
             <div class="card-body">
                 <h5 class="card-title">Apagar toda a base de dados</h5>
                 <p class="card-text">Este processo irá limpar totalmente a base de dados de cartões.</p>
-                <a href="#" class="btn btn-dark btn-block">Prosseguir</a>
+                <a asp-controller="Card" asp-action="DeleteCardBase" class="btn btn-dark btn-block">Prosseguir</a>
             </div>
         </div>
     </div>

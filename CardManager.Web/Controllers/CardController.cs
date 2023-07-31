@@ -48,7 +48,7 @@ namespace CardManager.Web.Controllers
                 var card = await _cardService.GetCardAsync(filter);
                 if (card != null)
                 {
-                    return View(card);
+                    return View("CardInfo", card);
                 }
             }
 
@@ -105,30 +105,52 @@ namespace CardManager.Web.Controllers
         {
             if (!string.IsNullOrEmpty(cardSerial))
             {
+                var card = await _cardService.GetCardAsync(cardSerial);
+                if (card != null)
+                {
+                    return View("DeleteCardConfirmation", card);
+                }
+
+                TempData["error"] = "Cartão não encontrado.";
+                return View();
+            }
+
+            return View();
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> DeleteCardConfirmation(string cardSerial)
+        {
+            if (!string.IsNullOrEmpty(cardSerial))
+            {
                 var success = await _cardService.DeleteCardAsync(cardSerial);
                 if (success)
                 {
-                    TempData["success"] = "O cartão foi apagado da base com sucesso";
+                    TempData["success"] = "Cartão apagado com sucesso!";
                     return RedirectToAction("DeleteCard");
                 }
             }
 
-            TempData["error"] = "Verifique o némero do cartão e tente novamente.";
+            return View();
+        }
+
+        public IActionResult DeleteCardBase()
+        {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteCardBase()
+        public async Task<IActionResult> DeleteCardBaseConfirmation()
         {
             var success = await _cardService.DeleteAllCardsAsync();
             if (success)
             {
                 TempData["success"] = "A base de cartões foi apagada com sucesso";
-                return RedirectToAction("DeleteCardBase");
+                return RedirectToAction("Index", "Home");
             }
 
             TempData["error"] = "Não foi possível apagar a base de cartães.";
-            return View();
+            return View("DeleteCardBase");
         }
     }
 }

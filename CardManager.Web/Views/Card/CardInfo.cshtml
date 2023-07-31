@@ -1,0 +1,21 @@
+﻿@model CardManager.Web.Models.Dtos.CardDto
+
+@{
+    ViewData["Title"] = "Informações do Cartão";
+}
+
+<div class="container mt-5" style="width: 80vh;">
+    <h2>Informações do Cartão</h2>
+
+    <div>
+        <strong>Número do Serial:</strong> @Model.CardSerial <br />
+        <strong>Nome do Colaborador:</strong> @Model.CardOwnerName <br />
+        <strong>CPF do Colaborador:</strong> @Model.CardOwnerCpf <br />
+        <strong>Tipo do Cartão:</strong> @Model.CardType <br />
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a asp-controller="Card" asp-action="GetCard"  class="btn btn-primary">Nova Busca</a>
+        <a class="btn btn-danger" href="/">Cancelar</a>
+    </div>
+</div>
