@@ -1,3 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Atualizar base de cartões";
 }
+
+
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class="card">
+        <div class="card-body">
+            <h2>Enviar arquivo CSV para atualizar a base de dados</h2>
+
+            <form asp-controller="Card" asp-action="SeedDatabase" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="fileInput" class="form-label">Selecione o arquivo CSV:</label>
+                    <input type="file" name="file" class="form-control" id="fileInput" accept=".csv" required/>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Enviar Arquivo</button>
+                    <a class="btn btn-danger" href="/">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

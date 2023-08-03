@@ -5,10 +5,10 @@ namespace CardManager.Web.Services.IService;
 
 public interface ICardService
 {
-    Task<bool> CreateNewCardAsync(CardDto newCardData);
-    Task<bool> UpdateDatabaseAsync(IFormFile fileData);
-    Task<byte[]?> GenerateCsvReport(string cardType);
-    Task<CardDto> GetCardAsync(string owner);
-    Task<bool> DeleteCardAsync(string cardSerial);
-    Task<bool> DeleteAllCardsAsync();
+    Task<ResponseDto> CreateNewCardAsync(CardDto newCardData);
+    Task<ResponseDto> UpdateDatabaseAsync(IFormFile fileData);
+    Task<ResponseDto> GenerateCsvReport(string cardType);
+    Task<ResponseDto> GetCardAsync(string owner);
+    Task<ResponseDto> DeleteCardAsync(string cardSerial);
+    Task<ResponseDto> DeleteAllCardsAsync();
 }

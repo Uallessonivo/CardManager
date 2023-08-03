@@ -8,10 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Services Url
-BackendConn.CardManagerBackendUrl = builder.Configuration["BackendUrl"]!;
+BackendConn.CardManagerBackendUrl = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Register services
 builder.Services.AddHttpClient<ICardService, CardService>();
+builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<ICardService, CardService>();
 
 var app = builder.Build();

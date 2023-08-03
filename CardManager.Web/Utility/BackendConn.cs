@@ -2,5 +2,5 @@
 
 public static class BackendConn
 {
-    public static string CardManagerBackendUrl { get; set; } = string.Empty;
+    public static string? CardManagerBackendUrl { get; set; }
 }

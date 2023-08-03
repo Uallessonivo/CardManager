@@ -6,58 +6,66 @@ namespace CardManager.Web.Services;
 
 public class CardService : ICardService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IBaseService _baseService;
 
-    public CardService(HttpClient httpClient)
+    public CardService(IBaseService baseService)
     {
-        _httpClient = httpClient;
+        _baseService = baseService;
     }
 
-    public async Task<bool> CreateNewCardAsync(CardDto newCardData)
+    public async Task<ResponseDto> CreateNewCardAsync(CardDto newCardData)
     {
-        var result = await _httpClient
-            .PostAsJsonAsync(BackendConn.CardManagerBackendUrl + "api/card/create-card", newCardData);
-        return result.IsSuccessStatusCode;
+        return await _baseService.SendAsync(new RequestDto
+        {
+            ApiType = ApiType.POST,
+            Data = newCardData,
+            Url = BackendConn.CardManagerBackendUrl + "api/Card/create-card"
+        })!;
     }
 
-    public async Task<bool> UpdateDatabaseAsync(IFormFile fileData)
+    public async Task<ResponseDto> UpdateDatabaseAsync(IFormFile fileData)
     {
-        var result = await _httpClient
-            .PostAsJsonAsync(BackendConn.CardManagerBackendUrl + "api/card/seed-database", fileData);
-        return result.IsSuccessStatusCode;
+        return await _baseService.SendAsync(new RequestDto
+        {
+            ApiType = ApiType.POST,
+            Data = fileData,
+            Url = BackendConn.CardManagerBackendUrl + "api/Card/seed-database"
+        })!;
     }
 
-    public async Task<byte[]?> GenerateCsvReport(string cardType)
+    public async Task<ResponseDto> GenerateCsvReport(string cardType)
     {
-        var result = await _httpClient
-                .GetAsync(BackendConn.CardManagerBackendUrl + "api/card/generate-report?type=" + cardType);
-        
-        if (!result.IsSuccessStatusCode)
-            return null;
-        
-        var resultContent = await result.Content.ReadAsByteArrayAsync();
-        return resultContent;
+        return await _baseService.SendAsync(new RequestDto
+        {
+            ApiType = ApiType.GET,
+            Url = BackendConn.CardManagerBackendUrl + "api/Card/generate-report?type=" + cardType
+        })!;
     }
 
-    public async Task<CardDto> GetCardAsync(string owner)
+    public async Task<ResponseDto> GetCardAsync(string owner)
     {
-        var result = await _httpClient
-            .GetFromJsonAsync<CardDto>(
-                BackendConn.CardManagerBackendUrl + "api/card/owner-card-cpf?owner=" + owner);
-        return result;
+        return await _baseService.SendAsync(new RequestDto
+        {
+            ApiType = ApiType.GET,
+            Url = BackendConn.CardManagerBackendUrl + "api/Card/filter-card-cpf?owner=" + owner
+        })!;
     }
 
-    public async Task<bool> DeleteCardAsync(string cardSerial)
+    public async Task<ResponseDto> DeleteCardAsync(string cardSerial)
     {
-        var result = await _httpClient
-            .DeleteAsync(BackendConn.CardManagerBackendUrl + "api/card/delete-card-by?cardSerial=" + cardSerial);
-        return result.IsSuccessStatusCode;
+        return await _baseService.SendAsync(new RequestDto
+        {
+            ApiType = ApiType.DELETE,
+            Url = BackendConn.CardManagerBackendUrl + "api/Card/delete-card?cardSerial=" + cardSerial
+        })!;
     }
 
-    public async Task<bool> DeleteAllCardsAsync()
+    public async Task<ResponseDto> DeleteAllCardsAsync()
     {
-        var result = await _httpClient
-            .DeleteAsync(BackendConn.CardManagerBackendUrl + "api/card/delete-all-cards");
-        return result.IsSuccessStatusCode;
+        return await _baseService.SendAsync(new RequestDto
+        {
+            ApiType = ApiType.DELETE,
+            Url = BackendConn.CardManagerBackendUrl + "api/Card/delete-cards/all"
+        })!;
     }
 }
