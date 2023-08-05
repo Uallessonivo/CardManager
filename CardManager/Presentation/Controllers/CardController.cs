@@ -105,15 +105,17 @@ namespace CardManager.Presentation.Controllers
         }
 
         [HttpGet("generate-report")]
-        public async Task<ResponseDto> DownloadReport([FromQuery] string type)
+        public async Task<FileResult> DownloadReport([FromQuery] string type)
         {
             var csvData = await _cardService.GenerateReport(type);
             var bytes = Encoding.UTF8.GetBytes(csvData.ToString());
             var stream = new MemoryStream(bytes);
+            var contentType = "text/csv";
+            var fileName = $"{DateTime.Now:yyyyMMdd}-{type}.csv";
 
-            _responseDto.Result = stream;
-            return _responseDto;
+            return File(stream, contentType, fileName);
         }
+
 
         [HttpPost("create-card")]
         public async Task<ResponseDto> CreateCard([FromBody] CardDto cardDto)
@@ -162,7 +164,7 @@ namespace CardManager.Presentation.Controllers
                 _responseDto.IsSuccess = false;
                 _responseDto.Message = ex.Message;
             }
-            
+
             return _responseDto;
         }
 
@@ -179,7 +181,7 @@ namespace CardManager.Presentation.Controllers
                 _responseDto.IsSuccess = false;
                 _responseDto.Message = ex.Message;
             }
-            
+
             return _responseDto;
         }
 
@@ -196,7 +198,7 @@ namespace CardManager.Presentation.Controllers
                 _responseDto.IsSuccess = false;
                 _responseDto.Message = ex.Message;
             }
-            
+
             return _responseDto;
         }
 
@@ -213,7 +215,7 @@ namespace CardManager.Presentation.Controllers
                 _responseDto.IsSuccess = false;
                 _responseDto.Message = ex.Message;
             }
-            
+
             return _responseDto;
         }
     }
