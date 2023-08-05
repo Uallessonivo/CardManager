@@ -6,7 +6,7 @@ public interface ICardService
 {
     Task<ResponseDto> CreateNewCardAsync(CardDto newCardData);
     Task<ResponseDto> UpdateDatabaseAsync(IFormFile fileData);
-    Task<ResponseDto> GenerateCsvReport(string cardType);
+    Task<GenerateFileResponseDto> GenerateCsvReport(string cardType);
     Task<ResponseDto> GetCardAsync(string owner);
     Task<ResponseDto> GetAllCardsAsync();
     Task<ResponseDto> DeleteCardAsync(string cardSerial);

@@ -33,13 +33,33 @@ public class CardService : ICardService
         })!;
     }
 
-    public async Task<ResponseDto> GenerateCsvReport(string cardType)
+    public async Task<GenerateFileResponseDto> GenerateCsvReport(string cardType)
     {
-        return await _baseService.SendAsync(new RequestDto
+        using (HttpClient client = new HttpClient())
         {
-            ApiType = ApiType.GET,
-            Url = BackendConn.CardManagerBackendUrl + "api/Card/generate-report?type=" + cardType
-        })!;
+            string backendUrl = BackendConn.CardManagerBackendUrl + "api/Card/generate-report?type=" + cardType;
+
+            GenerateFileResponseDto response = new GenerateFileResponseDto();
+
+            var csvData = await client.GetAsync(backendUrl);
+
+            if (csvData.IsSuccessStatusCode)
+            {
+                var contentBytes = await csvData.Content.ReadAsByteArrayAsync();
+
+                response.Content = contentBytes;
+                response.ContentType = "text/csv";
+                response.FileName = $"{DateTime.Now:yyyyMMdd}-{cardType}.csv";
+                response.Success = true;
+            }
+            else
+            {
+                response.Success = false;
+                response.ErrorMessage = "Erro ao obter os dados do servidor.";
+            }
+
+            return response;
+        }
     }
 
     public async Task<ResponseDto> GetCardAsync(string owner)

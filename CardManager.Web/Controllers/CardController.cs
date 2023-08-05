@@ -63,11 +63,15 @@ namespace CardManager.Web.Controllers
         {
             if (!string.IsNullOrEmpty(cardType))
             {
-                ResponseDto response = await _cardService.GenerateCsvReport(cardType);
-                // TODO
-
+                GenerateFileResponseDto response = await _cardService.GenerateCsvReport(cardType);
+                if (response.Success)
+                {
+                    TempData["success"] = "O arquivo será exportado em breve.";
+                    return File(response.Content, response.ContentType, response.FileName);
+                }
             }
 
+            TempData["error"] = "O arquivo não pode ser gerado.";
             return View();
         }
 
