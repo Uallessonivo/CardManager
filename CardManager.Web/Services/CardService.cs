@@ -51,6 +51,15 @@ public class CardService : ICardService
         })!;
     }
 
+    public async Task<ResponseDto> GetAllCardsAsync()
+    {
+        return await _baseService.SendAsync(new RequestDto
+        {
+            ApiType = ApiType.GET,
+            Url = BackendConn.CardManagerBackendUrl + "api/Card/list-cards"
+        })!;
+    }
+
     public async Task<ResponseDto> DeleteCardAsync(string cardSerial)
     {
         return await _baseService.SendAsync(new RequestDto

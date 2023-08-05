@@ -1,9 +1,9 @@
-﻿using System.Net;
-using System.Text;
-using CardManager.Web.Models.Dtos;
+﻿using CardManager.Web.Models.Dtos;
 using CardManager.Web.Services.IService;
 using CardManager.Web.Utility;
 using Newtonsoft.Json;
+using System.Net;
+using System.Text;
 
 namespace CardManager.Web.Services;
 
@@ -20,7 +20,7 @@ public class BaseService : IBaseService
     {
         try
         {
-            HttpClient client = _httpClientFactory.CreateClient("CardManagerBackend");
+            HttpClient client = _httpClientFactory.CreateClient();
 
             HttpRequestMessage message = new();
 
@@ -43,9 +43,9 @@ public class BaseService : IBaseService
                 ApiType.DELETE => HttpMethod.Delete,
                 _ => HttpMethod.Get
             };
-            
+
             apiResponse = await client.SendAsync(message);
-            
+
             switch (apiResponse.StatusCode)
             {
                 case HttpStatusCode.NotFound:

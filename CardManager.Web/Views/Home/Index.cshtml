@@ -17,7 +17,7 @@
         <div class="card h-100 mb-4">
             <div class="card-body">
                 <h5 class="card-title">Atualizar a base de dados</h5>
-                <p class="card-text">Este processo irá atualizar a base de dados. Envie o arquivo de cartões e todos eles serão inseridos na base.</p>
+                <p class="card-text">Este processo irá atualizar a base de dados a partir do relatório de cartões.</p>
                 <a asp-controller="Card" asp-action="SeedDatabase" class="btn btn-success btn-block">Prosseguir</a>
             </div>
         </div>
@@ -27,7 +27,7 @@
         <div class="card h-100 mb-4">
             <div class="card-body">
                 <h5 class="card-title">Gerar arquivo de cartões</h5>
-                <p class="card-text">Este processo irá criar um arquivo no formato CSV contendo os dados de todos os cartões presentes na base de dados.</p>
+                <p class="card-text">Este processo irá criar um arquivo CSV contendo os dados de todos os cartões.</p>
                 <a asp-controller="Card" asp-action="GenerateFile" class="btn btn-info btn-block">Prosseguir</a>
             </div>
         </div>
@@ -36,9 +36,9 @@
     <div class="col-sm-6">
         <div class="card h-100 mb-4">
             <div class="card-body">
-                <h5 class="card-title">Consultar cartão específico</h5>
-                <p class="card-text">Este processo irá pesquisar na base de dados um cartão específico com base nos dados informados.</p>
-                <a asp-controller="Card" asp-action="GetCard" class="btn btn-secondary btn-block">Prosseguir</a>
+                <h5 class="card-title">Visualizar cartões cadastrados</h5>
+                <p class="card-text">Este processo irá exibir uma lista dos cartões que estão salvos no banco de dados.</p>
+                <a asp-controller="Card" asp-action="GetAllCards" class="btn btn-secondary btn-block">Prosseguir</a>
             </div>
         </div>
     </div>

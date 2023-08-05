@@ -1,0 +1,35 @@
+﻿@model IEnumerable<CardManager.Web.Models.Dtos.CardDto>
+
+@{
+    ViewData["Title"] = "Visualizar cartões";
+}
+
+<div class="container mt-5 mb-3">
+    <div class="row g-3">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4">
+                <div class="card p-3 mb-2">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex flex-row align-items-center">
+                            <div class="ms-2 c-details">
+                                <h6 class="mb-0">@item.CardOwnerName</h6>
+                            </div>
+                        </div>
+                        @if (item.CardType == "0")
+                        {
+                            <div class="badge text-black"> <span>Despesas</span> </div>
+                        }
+                        else
+                        {
+                            <div class="badge text-black"> <span>Incentivo</span> </div>
+                        }
+                    </div>
+                    <div class="mt-5">
+                        <h3 class="heading">Cpf: @item.CardOwnerCpf<br>Serial: @item.CardSerial</h3>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

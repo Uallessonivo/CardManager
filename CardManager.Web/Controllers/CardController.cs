@@ -2,7 +2,6 @@
 using CardManager.Web.Services.IService;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Text;
 
 namespace CardManager.Web.Controllers
 {
@@ -37,24 +36,21 @@ namespace CardManager.Web.Controllers
             return View();
         }
 
-        public IActionResult GetCard()
+        public async Task<IActionResult> GetAllCards()
         {
-            return View();
-        }
+            List<CardDto>? list = new();
+            ResponseDto response = await _cardService.GetAllCardsAsync();
 
-        [HttpPost]
-        public async Task<IActionResult> GetCard(string owner)
-        {
-            if (!string.IsNullOrEmpty(owner))
+            if (response != null && response.IsSuccess)
             {
-                ResponseDto response = await _cardService.GetCardAsync(owner);
-                if (response.Result != null)
-                {
-                    return View("CardInfo", JsonConvert.DeserializeObject<CardDto>(Convert.ToString(response.Result)!));
-                }
+                list = JsonConvert.DeserializeObject<List<CardDto>>(Convert.ToString(response.Result)!);
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
             }
 
-            return View();
+            return View(list);
         }
 
         public IActionResult GenerateFile()
@@ -68,27 +64,8 @@ namespace CardManager.Web.Controllers
             if (!string.IsNullOrEmpty(cardType))
             {
                 ResponseDto response = await _cardService.GenerateCsvReport(cardType);
-                var contentType = "text/csv";
-                var fileName = $"{DateTime.Now:yyyyMMdd}-{cardType}.csv";
+                // TODO
 
-                TempData["success"] = "Arquivo gerado com sucesso!";
-
-                byte[] fileBytes;
-
-                if (response.Result is byte[])
-                {
-                    fileBytes = (byte[])response.Result;
-                }
-                else if (response.Result is string)
-                {
-                    fileBytes = Encoding.UTF8.GetBytes((string)response.Result);
-                }
-                else
-                {
-                    throw new InvalidOperationException("Tipo de conteúdo não suportado");
-                }
-
-                return File(fileBytes, contentType, fileName);
             }
 
             return View();
