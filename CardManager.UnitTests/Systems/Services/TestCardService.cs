@@ -401,5 +401,77 @@ namespace CardManager.UnitTests.Systems.Services
 
             await Assert.ThrowsAsync<Exception>(async () => await _fixture.CardService.UpdateCardAsync(cardId, updateCardDto));
         }
+
+        [Fact]
+        public async Task Should_Delete_Card_When_Id_Is_Valid()
+        {
+            // Arrange
+            var cardId = Guid.NewGuid();
+            
+            _fixture.CardRepositoryMock.Setup(repo => repo.GetCardById(cardId))
+                .ReturnsAsync(new Card());
+            
+            // Act
+            await _fixture.CardService.DeleteCardAsync(cardId);
+            
+            // Assert
+            _fixture.CardRepositoryMock.Verify(repo => repo.DeleteCard(It.IsAny<Card>()), Times.Once);
+        }
+        
+        [Fact]
+        public async Task Should_Throw_Exception_Delete_Card_When_Id_Is_Not_Found()
+        {
+            // Arrange
+            var cardId = Guid.NewGuid();
+            
+            _fixture.CardRepositoryMock.Setup(repo => repo.GetCardById(cardId))
+                .ReturnsAsync((Card)null);
+
+            // Assert
+            await Assert.ThrowsAsync<Exception>(async () => await _fixture.CardService.DeleteCardAsync(cardId));
+        }
+        
+        [Fact]
+        public async Task Should_Delete_Card_When_Serial_Is_Valid()
+        {
+            // Arrange
+            var cardSerial = "000000000000000";
+            
+            _fixture.CardRepositoryMock.Setup(repo => repo.GetCardBySerialNumber(cardSerial))
+                .ReturnsAsync(new Card());
+            
+            // Act
+            await _fixture.CardService.DeleteCardAsync(cardSerial);
+            
+            // Assert
+            _fixture.CardRepositoryMock.Verify(repo => repo.DeleteCard(It.IsAny<Card>()), Times.Once);
+        }
+        
+        [Fact]
+        public async Task Should_Throw_Exception_Delete_Card_When_Serial_Is_Not_Found()
+        {
+            // Arrange
+            var cardSerial = "000000000000000";
+            
+            _fixture.CardRepositoryMock.Setup(repo => repo.GetCardBySerialNumber(cardSerial))
+                .ReturnsAsync((Card)null);
+
+            // Assert
+            await Assert.ThrowsAsync<Exception>(async () => await _fixture.CardService.DeleteCardAsync(cardSerial));
+        }
+        
+        [Fact]
+        public async Task Should_Delete_All_Cards()
+        {
+            // Arrange
+            _fixture.CardRepositoryMock.Setup(repo => repo.DeleteAllCards())
+                .Returns(Task.CompletedTask);
+            
+            // Act
+            await _fixture.CardService.DeleteAllCardsAsync();
+            
+            // Assert
+            _fixture.CardRepositoryMock.Verify(repo => repo.DeleteAllCards(), Times.Once);
+        }
     }
 }
