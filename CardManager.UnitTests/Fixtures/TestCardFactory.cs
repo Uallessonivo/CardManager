@@ -22,6 +22,20 @@ namespace CardManager.UnitTests.Fixtures
                     CardOwnerName = "THIS IS THE OTHER NAME",
                     CardSerial = "000000000000000",
                     CardType = CardType.Incentivo
+                },
+                new Card {
+                    CardId = Guid.NewGuid(),
+                    CardOwnerCpf = "22222222222",
+                    CardOwnerName = "THIS IS THE OTHER NAME",
+                    CardSerial = "000000000000000",
+                    CardType = CardType.Incentivo
+                },
+                new Card {
+                    CardId = Guid.NewGuid(),
+                    CardOwnerCpf = "33333333333",
+                    CardOwnerName = "THIS IS THE OTHER NAME",
+                    CardSerial = "000000000000000",
+                    CardType = CardType.Incentivo
                 }
             };
         }
