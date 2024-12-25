@@ -7,11 +7,11 @@ namespace CardManager.Application.Validators
     {
         public static CardType IsCardValid(string cardTypeString)
         {
-            if (Enum.TryParse(cardTypeString, true, out CardType cardType))
+            if (Enum.TryParse(cardTypeString, true, out CardType cardType) && Enum.IsDefined(typeof(CardType), cardType))
             {
                 return cardType;
             }
-
+            
             throw new Exception(Errors.InvalidCardType(cardTypeString));
         }
     }
