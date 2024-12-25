@@ -149,6 +149,16 @@ namespace CardManager.Application.Services
 
         public async Task<List<Card>> GetAllPaginatedAsync(int pageNumber = 1, int pageSize = 10)
         {
+            if (pageNumber <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than zero.");
+            }
+
+            if (pageSize <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than zero.");
+            }
+            
             var cards = await _cardRepository.GetAllPaginated(pageNumber, pageSize);
             return cards;
         }
