@@ -128,6 +128,21 @@ namespace CardManager.UnitTests.Systems.Services
             var cards = Assert.IsAssignableFrom<List<Card>>(okResult);
             Assert.Equal(fakeCards.Count, cards.Count);
         }
+        
+        [Fact]
+        public async Task Should_Not_Return_Error_When_Empty()
+        {
+            // Arrange
+            _fixture.CardRepositoryMock.Setup(repo => repo.GetAll()).ReturnsAsync([]);
+
+            // Act
+            var result = await _fixture.CardService.GetAllAsync();
+
+            // Assert
+            var okResult = Assert.IsType<List<Card>>(result);
+            var cards = Assert.IsAssignableFrom<List<Card>>(okResult);
+            Assert.Empty(cards);
+        }
 
         [Fact]
         public async Task Should_Return_Card_When_Success()
