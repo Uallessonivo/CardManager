@@ -69,7 +69,8 @@ namespace CardManager.Application.Services
 
         public async Task<SeedDatabaseResponse> SeedDatabaseTask(IFormFile file)
         {
-            var cards = ProcessFile.Parse(file);
+            var processFile = new ProcessFile();
+            var cards = processFile.Parse(file);
             var failedCards = new List<FailedCardResponse>();
 
             foreach (var card in cards)

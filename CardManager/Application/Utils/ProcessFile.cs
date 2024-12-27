@@ -1,13 +1,14 @@
 ﻿using System.Globalization;
 using CardManager.Application.DTO;
+using CardManager.Application.Interfaces;
 using CsvHelper;
 using CsvHelper.Configuration;
 
 namespace CardManager.Application.Utils
 {
-    public static class ProcessFile
+    public class ProcessFile : IProcessFile
     {
-        public static List<CardDto> Parse(IFormFile file)
+        public List<CardDto> Parse(IFormFile file)
         {
             var reader = new StreamReader(file.OpenReadStream());
             var csvReader = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
