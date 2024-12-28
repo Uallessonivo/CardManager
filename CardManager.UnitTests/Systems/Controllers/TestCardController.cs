@@ -1,4 +1,3 @@
-using System.Collections;
 using CardManager.Application.DTO;
 using CardManager.Domain.Entities;
 using CardManager.UnitTests.Fixtures;
@@ -21,6 +20,21 @@ namespace CardManager.UnitTests.Systems.Controllers
         {
             // Arrange
             var cards = TestCardFactory.FakeCards().ToList();
+            _fixture.CardServiceMock.Setup(service => service.GetAllAsync()).ReturnsAsync(cards);
+            
+            // Act
+            var result = await _fixture.CardController.GetCards();
+            
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal(cards, result.Result);
+        }
+        
+        [Fact]
+        public async Task GetCards_Should_Return_Empty_List_When_No_Cards_Found()
+        {
+            // Arrange
+            var cards = new List<Card>();
             _fixture.CardServiceMock.Setup(service => service.GetAllAsync()).ReturnsAsync(cards);
             
             // Act
