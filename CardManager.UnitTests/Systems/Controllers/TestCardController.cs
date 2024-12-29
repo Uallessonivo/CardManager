@@ -46,7 +46,7 @@ namespace CardManager.UnitTests.Systems.Controllers
         }
         
         [Fact]
-        public async Task GetCards_Should_Thrown_Exception_When_Error_Occurs()
+        public async Task GetCards_Should_Throw_Exception_When_Error_Occurs()
         {
             // Arrange
             var exception = new Exception();
