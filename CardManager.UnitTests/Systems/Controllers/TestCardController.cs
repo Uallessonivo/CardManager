@@ -1,5 +1,6 @@
 using CardManager.Application.DTO;
 using CardManager.Domain.Entities;
+using CardManager.Domain.Errors;
 using CardManager.UnitTests.Fixtures;
 using Moq;
 
@@ -90,6 +91,23 @@ namespace CardManager.UnitTests.Systems.Controllers
             Assert.False(result.IsSuccess);
             Assert.Null(result.Result);
             Assert.Equal(exception.Message, result.Message);
+        }
+        
+        [Fact]
+        public async Task GetById_Should_Show_Error_Message_When_Card_Is_Not_Found()
+        {
+            // Arrange
+            var cardId = Guid.NewGuid();
+            _fixture.CardServiceMock.Setup(service => service.GetByIdAsync(cardId))
+                .ThrowsAsync(new Exception(Errors.CardNotFound(cardId)));
+            
+            // Act
+            var result = await _fixture.CardController.GetByIdAsync(cardId);
+            
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Result);
+            Assert.Equal(Errors.CardNotFound(cardId), result.Message);
         }
     }
 }
