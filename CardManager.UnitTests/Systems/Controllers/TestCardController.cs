@@ -59,5 +59,20 @@ namespace CardManager.UnitTests.Systems.Controllers
             Assert.False(result.IsSuccess);
             Assert.Equal(exception.Message, result.Message);
         }
+        
+        [Fact]
+        public async Task GetById_Should_Return_Card()
+        {
+            // Arrange
+            var cardId = Guid.NewGuid();
+            _fixture.CardServiceMock.Setup(service => service.GetByIdAsync(cardId)).ReturnsAsync(It.IsAny<Card>());
+            
+            // Act
+            var result = await _fixture.CardController.GetByIdAsync(cardId);
+            
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal(It.IsAny<Card>(), result.Result);
+        }
     }
 }
