@@ -160,5 +160,57 @@ namespace CardManager.UnitTests.Systems.Controllers
             Assert.Null(result.Result);
             Assert.Equal(Errors.CardNotFound(cardId), result.Message);
         }
+        
+        [Fact]
+        public async Task GetCardByOwnerCpf_Should_Return_Card()
+        {
+            // Arrange
+            var cards = TestCardFactory.FakeCards().ToList();
+            _fixture.CardServiceMock.Setup(service => service.GetByOwnerCpfAsync(cards.First().CardOwnerCpf!))
+                .ReturnsAsync(It.IsAny<Card>());
+            
+            // Act
+            var result = await _fixture.CardController.GetCardByOwnerCpf(cards.First().CardOwnerCpf!);
+            
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal(It.IsAny<Card>(), result.Result);
+        }
+        
+        [Fact]
+        public async Task GetCardByOwnerCpf_Should_Throw_Exception_When_Card_Is_Not_Found()
+        {
+            // Arrange
+            var cards = TestCardFactory.FakeCards().ToList();
+            var exception = new Exception();
+            _fixture.CardServiceMock.Setup(service => service.GetByOwnerCpfAsync(cards.First().CardOwnerCpf!))
+                .ThrowsAsync(exception);
+            
+            // Act
+            var result = await _fixture.CardController.GetCardByOwnerCpf(cards.First().CardOwnerCpf!);
+            
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Result);
+            Assert.Equal(exception.Message, result.Message);
+        }
+        
+        [Fact]
+        public async Task GetCardByOwnerCpf_Should_Show_Error_Message_When_Card_Is_Not_Found()
+        {
+            // Arrange
+            var cards = TestCardFactory.FakeCards().ToList();
+            var cardId = Guid.NewGuid();
+            _fixture.CardServiceMock.Setup(service => service.GetByOwnerCpfAsync(cards.First().CardOwnerCpf!))
+                .ThrowsAsync(new Exception(Errors.CardNotFound(cardId)));
+            
+            // Act
+            var result = await _fixture.CardController.GetCardByOwnerCpf(cards.First().CardOwnerCpf!);
+            
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Result);
+            Assert.Equal(Errors.CardNotFound(cardId), result.Message);
+        }
     }
 }
