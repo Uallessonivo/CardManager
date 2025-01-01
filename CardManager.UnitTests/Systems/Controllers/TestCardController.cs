@@ -212,5 +212,20 @@ namespace CardManager.UnitTests.Systems.Controllers
             Assert.Null(result.Result);
             Assert.Equal(Errors.CardNotFound(cardId), result.Message);
         }
+        
+        [Fact]
+        public async Task CreateCard_Should_Save_Card()
+        {
+            // Arrange
+            var cardDto = TestCardFactory.FakeCardsDto().First();
+            _fixture.CardServiceMock.Setup(service => service.CreateCardAsync(cardDto)).ReturnsAsync(It.IsAny<Card>());
+            
+            // Act
+            var result = await _fixture.CardController.CreateCard(cardDto);
+            
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal("Cartão criado com sucesso.", result.Message);
+        }
     }
 }
